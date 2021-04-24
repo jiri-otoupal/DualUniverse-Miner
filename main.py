@@ -13,6 +13,7 @@ def image_to_matrix():
     frames_path = ".jpg"
     img = Image.open(frames_path)
     data = np.array(img)
+    return data
 
 def print_hi(name):
     # Use a breakpoint in the code line below to debug your script.
