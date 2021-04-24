@@ -14,7 +14,11 @@ def image_to_matrix(path: str):
     data = np.array(img)
     return data
 
-
+def image_weight(data):
+    chunk_weights = np.isin(data[:,:,0],np.array_split(data[:,0:4,0],8)[0])
+    num_of_true = np.sum(chunk_weights)
+    comp_size = np.size(chunk_weights)
+    return num_of_true / comp_size
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
