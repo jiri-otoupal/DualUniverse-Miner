@@ -9,11 +9,11 @@ import numpy as np
 from PIL.Image import Image
 
 
-def image_to_matrix():
-    frames_path = ".jpg"
-    img = Image.open(frames_path)
+def image_to_matrix(path: str):
+    img = Image.open(path)
     data = np.array(img)
     return data
+
 
 def print_hi(name):
     # Use a breakpoint in the code line below to debug your script.
