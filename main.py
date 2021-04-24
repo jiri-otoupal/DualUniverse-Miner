@@ -15,9 +15,19 @@ def image_to_matrix(path: str):
     return data
 
 
-def image_weight(screen_data: np.array, sample_data: np.array, rgb: int, chunk_no: int):
+def image_weight(screen_data: np.array, sample_data: np.array, rgb: int):
+    """
+
+    :param screen_data: all data in screenshot
+    :param sample_data: sample that we are comparing to
+    :param rgb: number of index of color r=0 g=1 b=2
+    :return:
+    """
+    chunks = []
+    for chunk_no in range(0, 8):
+        chunks.append(np.array_split(sample_data[:, chunk_no+chunk_no*3:(chunk_no + 4)+chunk_no*3, rgb], 8))
     chunk_weights = np.isin(screen_data[:, :, rgb],
-                            np.array_split(sample_data[:, chunk_no:chunk_no + 4, rgb], 8))
+                            chunks)
     num_of_true = np.sum(chunk_weights)
     comp_size = np.size(chunk_weights)
     return num_of_true / comp_size
