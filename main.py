@@ -44,7 +44,7 @@ def image_crop_center(img, width, height):
 def image_recognize_by_color(screen_data: np.array, sample_data: np.array, rgb: int, small_area=True):
     """
 
-    :param small_area:
+    :param small_area: cropped at center of screen
     :param screen_data: all data in screenshot
     :param sample_data: sample that we are comparing to
     :param rgb: number of index of color r=0 g=1 b=2
