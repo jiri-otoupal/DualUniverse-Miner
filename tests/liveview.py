@@ -57,20 +57,6 @@ def image_recognize_by_color(screen_data: np.array, sample_data: np.array, rgb: 
     return chunk_weights
 
 
-def isin_try(screen_data, sample_data, rgb):
-    chunks = []
-    for chunk_no in range(0, 8):
-        chunks.append(np.array_split(sample_data[:, chunk_no + chunk_no * 3:(chunk_no + 4) + chunk_no * 3, rgb], 8))
-    res = np.zeros(screen_data[:, :, rgb].shape, dtype=bool)
-    for y in range(0, np.size(screen_data[:, :, rgb], axis=0)):
-        for x in range(0, np.size(screen_data[:, :, rgb], axis=1)):
-            for chunky in chunks:
-                if not np.all(res[x:x + 3, y:y + 3]):
-                    for chunkx in chunky:
-                        res[x:x + 3, y:y + 3] = chunkx == screen_data[x:x + 3, y:y + 3, rgb]
-        print(y)
-    return res
-
 
 def image_weight(screen_data: np.array, sample_data: np.array):
     chunk_weights = image_recognize(screen_data, sample_data)

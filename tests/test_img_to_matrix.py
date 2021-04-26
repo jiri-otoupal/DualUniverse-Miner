@@ -1,10 +1,12 @@
 from threading import Thread
+from time import sleep
 
 import cv2
 import unittest
 
 import numpy as np
 import pyautogui
+import pydirectinput as pydirectinput
 from matplotlib import pyplot as plt
 from numpy.lib.stride_tricks import as_strided
 
@@ -31,13 +33,15 @@ class MyTestCase(unittest.TestCase):
         img_frombytes(rec).show()
 
     def test_auto(self):
-        color = (0, 188, 252)
-
-        s = pyautogui.screenshot()
-        for x in range(s.width):
-            for y in range(s.height):
-                if s.getpixel((x, y)) == color:
-                    pyautogui.click(x, y)  # do something here
+        sleep(5)
+        pydirectinput.click(100, 100, duration=2)
+        #color = (0, 188, 252)
+#
+        #s = pyautogui.screenshot()
+        #for x in range(s.width):
+        #    for y in range(s.height):
+        #        if s.getpixel((x, y)) == color:
+        #            pyautogui.click(x, y)  # do something here
 
 
 if __name__ == 'main':
