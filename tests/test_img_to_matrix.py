@@ -25,10 +25,19 @@ class MyTestCase(unittest.TestCase):
         # )
         # print(digits)
 
-        rec = compare_to_all_samples(imgs, False)
-        mat = apply_filter(rec, 25)
-        c = apply_filter_dilation(mat, 1)
-        img_frombytes(c).show()
+        rec = compare_to_all_samples(imgs, True)
+        # mat = apply_filter(rec, 0)
+        # c = apply_filter_dilation(mat, 1)
+        img_frombytes(rec).show()
+
+    def test_auto(self):
+        color = (0, 188, 252)
+
+        s = pyautogui.screenshot()
+        for x in range(s.width):
+            for y in range(s.height):
+                if s.getpixel((x, y)) == color:
+                    pyautogui.click(x, y)  # do something here
 
 
 if __name__ == 'main':

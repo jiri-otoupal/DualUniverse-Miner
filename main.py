@@ -9,6 +9,7 @@ from scipy.ndimage.morphology import grey_dilation, generate_binary_structure, i
 import numpy as np
 from PIL import Image
 
+dir_scanned = "blue"
 
 def image_to_matrix(path: str):
     img = Image.open(path)
@@ -94,10 +95,10 @@ def image_weight_by_color(screen_data: np.array, sample_data: np.array, rgb: int
 
 
 def compare_to_all_samples(screen_data: np.array, cropped=True):
-    samples = os.listdir("../images/bauxite/")
+    samples = os.listdir("../images/"+dir_scanned+"/")
     recognized = None
     for sample in samples:
-        sample_mat = image_to_matrix("../images/bauxite/" + sample)
+        sample_mat = image_to_matrix("../images/"+dir_scanned+"/" + sample)
         if recognized is None:
             recognized = image_recognize(screen_data, sample_mat, cropped)
         else:
