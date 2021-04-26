@@ -50,7 +50,7 @@ def image_recognize_by_color(screen_data: np.array, sample_data: np.array, rgb: 
     # chunk_weights = isin_try(screen_data, sample_data, rgb)
     sample = np.unique(sample_data[:, :, rgb]).flatten()
     if small_area:
-        cropped_screen = image_crop_center(screen_data[:, :, rgb], 500, 500)
+        cropped_screen = image_crop_center(screen_data[:, :, rgb], 600, 600)
     else:
         cropped_screen = screen_data[:, :, rgb]
     chunk_weights = np.isin(cropped_screen, sample, assume_unique=True)
@@ -135,23 +135,24 @@ def get_pic():
 
 def grab_frame():
     image = np.array(get_pic())
-    rec = compare_to_all_samples(image, bool(sys.argv[3]))
+    rec = compare_to_all_samples(image, sys.argv[3] == "True")
     mat = apply_filter(rec, int(sys.argv[1]))
     return apply_filter_dilation(mat, int(sys.argv[2]))
-
 
 
 fig = plt.figure()
 data = img_frombytes(grab_frame())
 im = plt.imshow(data, cmap='gist_gray_r', vmin=0, vmax=1)
 
+
 def init():
     im.set_data(img_frombytes(grab_frame()))
+
 
 def animate(i):
     im.set_data(img_frombytes(grab_frame()))
     return im
 
-anim = animation.FuncAnimation(fig, animate, init_func=init,
-                               interval=500)
+
+anim = animation.FuncAnimation(fig, animate, init_func=init, interval=500)
 plt.show()
