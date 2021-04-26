@@ -2,7 +2,9 @@ import os
 import struct
 
 import PIL
+import numba
 import numpy
+from numba.roc.decorators import autojit
 from scipy.ndimage.morphology import grey_dilation, generate_binary_structure, iterate_structure, binary_dilation
 
 # This is a sample Python script.
@@ -44,10 +46,21 @@ def image_recognize_by_color(screen_data: np.array, sample_data: np.array, rgb: 
     chunks = []
     for chunk_no in range(0, 8):
         chunks.append(np.array_split(sample_data[:, chunk_no + chunk_no * 3:(chunk_no + 4) + chunk_no * 3, rgb], 8))
-    chunk_weights = np.isin(screen_data[:, :, rgb],
-                            chunks)
+    chunk_weights = np.isin(screen_data[:, :, rgb], chunks)
     return chunk_weights
 
+
+def findFirst_jit(a, b):
+    for i in range( len(a) ):
+        result = True
+        for j in range(len(b)):
+            result = result and (a[i+j] == b[j])
+            if not result:
+                break
+
+        if result:
+            return i
+    return 0
 
 def image_weight(screen_data: np.array, sample_data: np.array):
     chunk_weights = image_recognize(screen_data, sample_data)
@@ -102,7 +115,7 @@ def apply_filter(mat, confidence: int):
     return np.greater(mat, confidence)
 
 
-def apply_filter_dilation(mat,iterations):
+def apply_filter_dilation(mat, iterations):
     return binary_dilation(mat, iterations=iterations)
 
 
