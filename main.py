@@ -25,8 +25,8 @@ def intersect_colors(red, green, blue):
     return mat_intersect
 
 
-def image_recognize(screen_data: np.array, sample_data: np.array):
-    ir = lambda rgb: image_recognize_by_color(screen_data, sample_data, rgb)
+def image_recognize(screen_data: np.array, sample_data: np.array, cropped=True):
+    ir = lambda rgb: image_recognize_by_color(screen_data, sample_data, rgb, cropped)
     return intersect_colors(ir(0), ir(1), ir(2))
 
 
