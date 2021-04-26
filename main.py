@@ -35,15 +35,16 @@ def image_recognize(screen_data: np.array, sample_data: np.array):
 
 
 def image_crop_center(img, width, height):
-    y, x= img.shape
+    y, x = img.shape
     startx = x // 2 - width // 2
     starty = y // 2 - height // 2
     return img[starty:starty + height, startx:startx + width]
 
 
-def image_recognize_by_color(screen_data: np.array, sample_data: np.array, rgb: int,small_area=True):
+def image_recognize_by_color(screen_data: np.array, sample_data: np.array, rgb: int, small_area=True):
     """
 
+    :param small_area:
     :param screen_data: all data in screenshot
     :param sample_data: sample that we are comparing to
     :param rgb: number of index of color r=0 g=1 b=2
@@ -53,7 +54,7 @@ def image_recognize_by_color(screen_data: np.array, sample_data: np.array, rgb: 
     # chunk_weights = isin_try(screen_data, sample_data, rgb)
     sample = np.unique(sample_data[:, :, rgb]).flatten()
     if small_area:
-        cropped_screen = image_crop_center(screen_data[:, :, rgb],500,500)
+        cropped_screen = image_crop_center(screen_data[:, :, rgb], 500, 500)
     else:
         cropped_screen = screen_data[:, :, rgb]
     chunk_weights = np.isin(cropped_screen, sample, assume_unique=True)
