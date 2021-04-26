@@ -1,9 +1,5 @@
 import os
 
-import numba
-from numba import cuda, guvectorize
-from numba import vectorize
-from numba.roc.decorators import autojit
 from scipy.ndimage.morphology import grey_dilation, generate_binary_structure, iterate_structure, binary_dilation
 
 # This is a sample Python script.
