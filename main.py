@@ -93,15 +93,15 @@ def image_weight_by_color(screen_data: np.array, sample_data: np.array, rgb: int
     return num_of_true / comp_size
 
 
-def compare_to_all_samples(screen_data: np.array):
+def compare_to_all_samples(screen_data: np.array, cropped=True):
     samples = os.listdir("../images/bauxite/")
     recognized = None
     for sample in samples:
         sample_mat = image_to_matrix("../images/bauxite/" + sample)
         if recognized is None:
-            recognized = image_recognize(screen_data, sample_mat)
+            recognized = image_recognize(screen_data, sample_mat, cropped)
         else:
-            recognized += image_recognize(screen_data, sample_mat)
+            recognized += image_recognize(screen_data, sample_mat, cropped)
     return recognized
 
 
