@@ -1,9 +1,8 @@
 import os
-import struct
 
-import PIL
 import numba
-import numpy
+from numba import cuda, guvectorize
+from numba import vectorize
 from numba.roc.decorators import autojit
 from scipy.ndimage.morphology import grey_dilation, generate_binary_structure, iterate_structure, binary_dilation
 
@@ -35,7 +34,14 @@ def image_recognize(screen_data: np.array, sample_data: np.array):
     return intersect_colors(ir(0), ir(1), ir(2))
 
 
-def image_recognize_by_color(screen_data: np.array, sample_data: np.array, rgb: int):
+def image_crop_center(img, width, height):
+    y, x= img.shape
+    startx = x // 2 - width // 2
+    starty = y // 2 - height // 2
+    return img[starty:starty + height, startx:startx + width]
+
+
+def image_recognize_by_color(screen_data: np.array, sample_data: np.array, rgb: int,small_area=True):
     """
 
     :param screen_data: all data in screenshot
@@ -43,24 +49,31 @@ def image_recognize_by_color(screen_data: np.array, sample_data: np.array, rgb: 
     :param rgb: number of index of color r=0 g=1 b=2
     :return:
     """
-    chunks = []
-    for chunk_no in range(0, 8):
-        chunks.append(np.array_split(sample_data[:, chunk_no + chunk_no * 3:(chunk_no + 4) + chunk_no * 3, rgb], 8))
-    chunk_weights = np.isin(screen_data[:, :, rgb], chunks)
+    # TODO: Rewrite slow
+    # chunk_weights = isin_try(screen_data, sample_data, rgb)
+    sample = np.unique(sample_data[:, :, rgb]).flatten()
+    if small_area:
+        cropped_screen = image_crop_center(screen_data[:, :, rgb],500,500)
+    else:
+        cropped_screen = screen_data[:, :, rgb]
+    chunk_weights = np.isin(cropped_screen, sample, assume_unique=True)
     return chunk_weights
 
 
-def findFirst_jit(a, b):
-    for i in range( len(a) ):
-        result = True
-        for j in range(len(b)):
-            result = result and (a[i+j] == b[j])
-            if not result:
-                break
+def isin_try(screen_data, sample_data, rgb):
+    chunks = []
+    for chunk_no in range(0, 8):
+        chunks.append(np.array_split(sample_data[:, chunk_no + chunk_no * 3:(chunk_no + 4) + chunk_no * 3, rgb], 8))
+    res = np.zeros(screen_data[:, :, rgb].shape, dtype=bool)
+    for y in range(0, np.size(screen_data[:, :, rgb], axis=0)):
+        for x in range(0, np.size(screen_data[:, :, rgb], axis=1)):
+            for chunky in chunks:
+                if not np.all(res[x:x + 3, y:y + 3]):
+                    for chunkx in chunky:
+                        res[x:x + 3, y:y + 3] = chunkx == screen_data[x:x + 3, y:y + 3, rgb]
+        print(y)
+    return res
 
-        if result:
-            return i
-    return 0
 
 def image_weight(screen_data: np.array, sample_data: np.array):
     chunk_weights = image_recognize(screen_data, sample_data)

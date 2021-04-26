@@ -24,9 +24,7 @@ class MyTestCase(unittest.TestCase):
 
         rec = compare_to_all_samples(imgs)
         mat = apply_filter(rec, 25)
-        x = apply_filter_dilation(mat,1)
         img_frombytes(mat).show()
-        pass
 
 
 if __name__ == '__main__':
