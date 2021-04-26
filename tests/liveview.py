@@ -1,4 +1,5 @@
 import os
+import sys
 from threading import Thread
 
 import numpy as np
@@ -134,9 +135,9 @@ def get_pic():
 
 def grab_frame():
     image = np.array(get_pic())
-    rec = compare_to_all_samples(image, True)
-    mat = apply_filter(rec, 27)
-    return apply_filter_dilation(mat, 1)
+    rec = compare_to_all_samples(image, bool(sys.argv[3]))
+    mat = apply_filter(rec, int(sys.argv[1]))
+    return apply_filter_dilation(mat, int(sys.argv[2]))
 
 
 
