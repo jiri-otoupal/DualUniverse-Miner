@@ -1,15 +1,14 @@
 import os
+import sys
+from threading import Thread
 
-from scipy.ndimage.morphology import grey_dilation, generate_binary_structure, iterate_structure, binary_dilation
-
-# This is a sample Python script.
-
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 import numpy as np
+import pyautogui
 from PIL import Image
+from matplotlib import pyplot as plt, animation
+from matplotlib.pyplot import draw
+from scipy.ndimage import binary_dilation
 
-dir_scanned = "bauxite"
 
 def image_to_matrix(path: str):
     img = Image.open(path)
@@ -51,82 +50,12 @@ def image_recognize_by_color(screen_data: np.array, sample_data: np.array, rgb: 
     # chunk_weights = isin_try(screen_data, sample_data, rgb)
     sample = np.unique(sample_data[:, :, rgb]).flatten()
     if small_area:
-        cropped_screen = image_crop_center(screen_data[:, :, rgb], 500, 500)
+        cropped_screen = image_crop_center(screen_data[:, :, rgb], 600, 600)
     else:
         cropped_screen = screen_data[:, :, rgb]
     chunk_weights = np.isin(cropped_screen, sample, assume_unique=True)
     return chunk_weights
 
-
-def blur(img, radius):
-    orig = np.zeros_like(img, dtype='int32')
-    np.copyto(orig, img, casting='unsafe')
-
-    d = 2 * radius - 1
-    avg = np.zeros_like(orig)
-    for i in range(d):
-        for j in range(d):
-            avg += np.pad(orig[i: _omit_zero(i - d + 1), j: _omit_zero(j - d + 1)],
-                          _get_pad_tuple(len(img.shape), d, i, j), 'edge')
-    avg = avg // (d ** 2)
-
-    avg = avg.clip(0, 255)
-    res = np.empty_like(img)
-
-    np.copyto(res, avg, casting='unsafe')
-    return res
-
-
-def unsharp_mask(img, amount, radius, threshold):
-    orig = np.zeros_like(img, dtype='int32')
-    np.copyto(orig, img, casting='unsafe')
-
-    d = 2 * radius - 1
-
-    lowpass = np.zeros_like(orig)
-    for i in range(d):
-        for j in range(d):
-            lowpass += np.pad(orig[i: _omit_zero(i - d + 1), j: _omit_zero(j - d + 1)],
-                              _get_pad_tuple(len(img.shape), d, i, j), 'edge')
-    lowpass = lowpass // (d ** 2)
-
-    highpass = orig - lowpass
-
-    tmp = orig + (amount / 100.) * highpass
-
-    tmp = tmp.clip(0, 255)
-    res = np.zeros_like(img)
-    np.copyto(res, tmp, casting='unsafe')
-
-    res = np.where(np.abs(img^res) < threshold, img, res)
-    return res
-
-
-def _omit_zero(x):
-    if x == 0:
-        return None
-    return x
-
-
-def _get_pad_tuple(dim, d, i, j):
-    if dim == 2:  # greyscale
-        return (d - i - 1, i), (d - j - 1, j)
-    else:   # color (and alpha) channels
-        return (d - i - 1, i), (d - j - 1, j), (0, 0)
-
-def isin_try(screen_data, sample_data, rgb):
-    chunks = []
-    for chunk_no in range(0, 8):
-        chunks.append(np.array_split(sample_data[:, chunk_no + chunk_no * 3:(chunk_no + 4) + chunk_no * 3, rgb], 8))
-    res = np.zeros(screen_data[:, :, rgb].shape, dtype=bool)
-    for y in range(0, np.size(screen_data[:, :, rgb], axis=0)):
-        for x in range(0, np.size(screen_data[:, :, rgb], axis=1)):
-            for chunky in chunks:
-                if not np.all(res[x:x + 3, y:y + 3]):
-                    for chunkx in chunky:
-                        res[x:x + 3, y:y + 3] = chunkx == screen_data[x:x + 3, y:y + 3, rgb]
-        print(y)
-    return res
 
 
 def image_weight(screen_data: np.array, sample_data: np.array):
@@ -151,10 +80,10 @@ def image_weight_by_color(screen_data: np.array, sample_data: np.array, rgb: int
 
 
 def compare_to_all_samples(screen_data: np.array, cropped=True):
-    samples = os.listdir("../images/"+dir_scanned+"/")
+    samples = os.listdir("../images/bauxite/")
     recognized = None
     for sample in samples:
-        sample_mat = image_to_matrix("../images/"+dir_scanned+"/" + sample)
+        sample_mat = image_to_matrix("../images/bauxite/" + sample)
         if recognized is None:
             recognized = image_recognize(screen_data, sample_mat, cropped)
         else:
@@ -186,8 +115,30 @@ def apply_filter_dilation(mat, iterations):
     return binary_dilation(mat, iterations=iterations)
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print()
+def get_pic():
+    return pyautogui.screenshot()
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+
+def grab_frame():
+    image = np.array(get_pic())
+    rec = compare_to_all_samples(image, sys.argv[3] == "True")
+    mat = apply_filter(rec, int(sys.argv[1]))
+    return apply_filter_dilation(mat, int(sys.argv[2]))
+
+
+fig = plt.figure()
+data = img_frombytes(grab_frame())
+im = plt.imshow(data, cmap='gist_gray_r', vmin=0, vmax=1)
+
+
+def init():
+    im.set_data(img_frombytes(grab_frame()))
+
+
+def animate(i):
+    im.set_data(img_frombytes(grab_frame()))
+    return im
+
+
+anim = animation.FuncAnimation(fig, animate, init_func=init, interval=500)
+plt.show()
