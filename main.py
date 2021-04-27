@@ -9,7 +9,7 @@ from scipy.ndimage.morphology import grey_dilation, generate_binary_structure, i
 import numpy as np
 from PIL import Image
 
-dir_scanned = "blue"
+dir_scanned = "bauxite"
 
 def image_to_matrix(path: str):
     img = Image.open(path)
@@ -57,6 +57,62 @@ def image_recognize_by_color(screen_data: np.array, sample_data: np.array, rgb: 
     chunk_weights = np.isin(cropped_screen, sample, assume_unique=True)
     return chunk_weights
 
+
+def blur(img, radius):
+    orig = np.zeros_like(img, dtype='int32')
+    np.copyto(orig, img, casting='unsafe')
+
+    d = 2 * radius - 1
+    avg = np.zeros_like(orig)
+    for i in range(d):
+        for j in range(d):
+            avg += np.pad(orig[i: _omit_zero(i - d + 1), j: _omit_zero(j - d + 1)],
+                          _get_pad_tuple(len(img.shape), d, i, j), 'edge')
+    avg = avg // (d ** 2)
+
+    avg = avg.clip(0, 255)
+    res = np.empty_like(img)
+
+    np.copyto(res, avg, casting='unsafe')
+    return res
+
+
+def unsharp_mask(img, amount, radius, threshold):
+    orig = np.zeros_like(img, dtype='int32')
+    np.copyto(orig, img, casting='unsafe')
+
+    d = 2 * radius - 1
+
+    lowpass = np.zeros_like(orig)
+    for i in range(d):
+        for j in range(d):
+            lowpass += np.pad(orig[i: _omit_zero(i - d + 1), j: _omit_zero(j - d + 1)],
+                              _get_pad_tuple(len(img.shape), d, i, j), 'edge')
+    lowpass = lowpass // (d ** 2)
+
+    highpass = orig - lowpass
+
+    tmp = orig + (amount / 100.) * highpass
+
+    tmp = tmp.clip(0, 255)
+    res = np.zeros_like(img)
+    np.copyto(res, tmp, casting='unsafe')
+
+    res = np.where(np.abs(img^res) < threshold, img, res)
+    return res
+
+
+def _omit_zero(x):
+    if x == 0:
+        return None
+    return x
+
+
+def _get_pad_tuple(dim, d, i, j):
+    if dim == 2:  # greyscale
+        return (d - i - 1, i), (d - j - 1, j)
+    else:   # color (and alpha) channels
+        return (d - i - 1, i), (d - j - 1, j), (0, 0)
 
 def isin_try(screen_data, sample_data, rgb):
     chunks = []
