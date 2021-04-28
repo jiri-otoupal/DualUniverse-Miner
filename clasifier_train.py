@@ -8,7 +8,7 @@ from tensorflow import keras
 from tensorflow.keras import layers
 from tensorflow.keras.models import Sequential
 
-batch_size = 256
+batch_size = 2048
 img_height = 32
 img_width = 32
 data_dir = "images"
@@ -64,24 +64,24 @@ model = Sequential([
     layers.MaxPooling2D(),
     layers.Conv2D(128, 3, padding='same', activation='relu'),
     layers.MaxPooling2D(),
-    layers.Dropout(0.1),
+    layers.Dropout(0.2),
     layers.Flatten(),
     layers.Dense(256, activation='relu'),
     layers.Dense(num_classes)
     #layers.Dense(num_classes, "softmax")
 ])
 
-model.compile(optimizer='nadam',
+model.compile(optimizer='adam',
               #loss=tf.keras.losses.SparseCategoricalCrossentropy(),
               loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
               metrics=['accuracy'])
 model.summary()
 
-epochs = 15
+epochs = 1000
 history = model.fit(
     train_ds,
     validation_data=val_ds,
     epochs=epochs
 )
-
+model.trainable = False
 model.save("ores")
