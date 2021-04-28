@@ -8,19 +8,23 @@ from PIL import Image
 from keras.backend import expand_dims, clear_session
 from keras.models import load_model
 from tensorflow import keras
-from tensorflow.python.framework.ops import reset_default_graph
 
 model = load_model('ores')
 class_names = ['bauxite', 'blue', 'coal', 'hematite', 'lacobus', 'quartz', 'warning']
-
 
 img = keras.preprocessing.image.load_img(
     "samples/7777.png", target_size=(32, 32)
 )
 img_array = keras.preprocessing.image.img_to_array(img)
 img_array = expand_dims(img_array, 0)  # Create a batch
-
-predictions = model.predict(img_array)
+t0 = time()
+print("Warmup Predicting")
+predictions = model.predict(img_array, use_multiprocessing=True, batch_size=1024, workers=8)
+print("%.4f sec" % (time() - t0))
+t0 = time()
+print("Started Predicting")
+predictions = model.predict(img_array, use_multiprocessing=True, batch_size=1024, workers=8)
+print("%.4f sec" % (time() - t0))
 score = tf.nn.softmax(predictions[0])
 
 print(

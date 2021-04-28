@@ -71,7 +71,7 @@ model = Sequential([
     #layers.Dense(num_classes, "softmax")
 ])
 
-model.compile(optimizer='adam',
+model.compile(optimizer='nadam',
               #loss=tf.keras.losses.SparseCategoricalCrossentropy(),
               loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
               metrics=['accuracy'])
