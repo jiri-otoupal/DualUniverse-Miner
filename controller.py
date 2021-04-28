@@ -80,9 +80,55 @@ def MoveMouse(hexKeyCode):
     ctypes.windll.user32.SendInput(1, ctypes.pointer(x), ctypes.sizeof(x))
 
 
-if __name__ == '__main__':
-    time.sleep(5)
+def PressAndRelease(t: float, key: int):
+    PressKey(key)
+    time.sleep(t)
+    ReleaseKey(key)
+
+
+def Forward(t: float):
+    PressAndRelease(t, W)
+
+
+def Backward(t: float):
+    PressAndRelease(t, S)
+
+
+def GoLeft(t: float):
+    PressAndRelease(t, A)
+
+
+def GoRight(t: float):
+    PressAndRelease(t, D)
+
+
+def LookLeft(angle: int = 45):
     PressKey(Left)
-    time.sleep(1)
+    time.sleep((1.79 / 360) * angle)
     ReleaseKey(Left)
-    time.sleep(1)
+
+
+def LookRight(angle: int = 45):
+    PressKey(Right)
+    time.sleep((1.79 / 360) * angle)
+    ReleaseKey(Right)
+
+
+def LookUp(angle: int = 30):
+    PressKey(Up)
+    time.sleep((1.79 / 360) * angle)
+    ReleaseKey(Up)
+
+
+def LookDown(angle: int = 30):
+    PressKey(Down)
+    time.sleep((1.79 / 360) * angle)
+    ReleaseKey(Down)
+
+
+if __name__ == '__main__':
+    time.sleep(3)
+    LookUp()
+    LookDown()
+    LookLeft()
+    LookRight()
