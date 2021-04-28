@@ -8,7 +8,7 @@ from tensorflow import keras
 from tensorflow.keras import layers
 from tensorflow.keras.models import Sequential
 
-batch_size = 2048
+batch_size = 32
 img_height = 32
 img_width = 32
 data_dir = "images"
@@ -77,7 +77,7 @@ model.compile(optimizer='adam',
               metrics=['accuracy'])
 model.summary()
 
-epochs = 1000
+epochs = 50
 history = model.fit(
     train_ds,
     validation_data=val_ds,

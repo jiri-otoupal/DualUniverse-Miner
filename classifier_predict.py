@@ -15,7 +15,7 @@ class_names = ['bauxite', 'blue', 'coal', 'hematite', 'lacobus', 'quartz', 'warn
 
 
 img = keras.preprocessing.image.load_img(
-    "samples/vrmvrmVrm.png", target_size=(32, 32)
+    "samples/7777.png", target_size=(32, 32)
 )
 img_array = keras.preprocessing.image.img_to_array(img)
 img_array = expand_dims(img_array, 0)  # Create a batch
