@@ -19,7 +19,6 @@ from silence_tensorflow import silence_tensorflow
 
 import controller
 from logger import config_logger
-from vision import Vision
 
 """
 Config
@@ -35,6 +34,7 @@ if __name__ == '__main__':
     logging.info("Loading Neural Net Model [" + model_to_use + "]... Please Wait")
     silence_tensorflow()
     from classifier_predict import Classifier
+    from vision import Vision
 
     try:
         classifier = Classifier(model_to_use)
