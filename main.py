@@ -64,3 +64,4 @@ if __name__ == '__main__':
     vision = Vision(my, classifier)
     while vision.what_is_ahead()[0] == "hematite":
         controller.Mine()
+    logging.info("Is not Hematite")
