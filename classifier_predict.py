@@ -1,3 +1,4 @@
+import logging
 import os
 from itertools import product
 from time import time
@@ -9,25 +10,27 @@ from keras.backend import expand_dims, clear_session
 from keras.models import load_model
 from tensorflow import keras
 
-model = load_model('ores')
-class_names = ['bauxite', 'blue', 'coal', 'hematite', 'lacobus', 'quartz', 'warning']
 
-img = keras.preprocessing.image.load_img(
-    "samples/vrmvrmVrm.png", target_size=(32, 32)
-)
-img_array = keras.preprocessing.image.img_to_array(img)
-img_array = expand_dims(img_array, 0)  # Create a batch
-t0 = time()
-print("Warmup Predicting")
-predictions = model.predict(img_array, use_multiprocessing=True, batch_size=1024, workers=8)
-print("%.4f sec" % (time() - t0))
-t0 = time()
-print("Started Predicting")
-predictions = model.predict(img_array, use_multiprocessing=True, batch_size=1024, workers=8)
-print("%.4f sec" % (time() - t0))
-score = tf.nn.softmax(predictions[0])
+class Classifier:
 
-print(
-    "This image most likely belongs to {} with a {:.2f} percent confidence."
-        .format(class_names[np.argmax(score)], 100 * np.max(score))
-)
+    def __init__(self, model):
+        self.time = 0
+        self.model = load_model(model)
+        self.class_names = ['bauxite', 'blue', 'coal', 'hematite', 'lacobus', 'quartz', 'warning']
+
+    def predict(self, path_to_img) -> [str, float]:
+        """
+        Will predict image class of image
+        :param path_to_img: Path to image
+        :rtype: str, float
+        :return: class and percent confidence 0-1
+        """
+        t0 = time()
+        img = keras.preprocessing.image.load_img(os.path.normpath(path_to_img), target_size=(32, 32))
+        img_array = keras.preprocessing.image.img_to_array(img)
+        img_array = expand_dims(img_array, 0)  # Create a batch
+        predictions = self.model.predict(img_array)
+        score = tf.nn.softmax(predictions[0])
+        logging.debug("Prediction took %.4f sec" % (time() - t0))
+        self.time = (time() - t0)
+        return self.class_names[np.argmax(score)], np.max(score)
