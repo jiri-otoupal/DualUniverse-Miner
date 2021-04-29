@@ -74,7 +74,7 @@ if __name__ == '__main__':
             controller.Forward(2)
         if a == "hematite":
             controller.Mine()
-        elif left < 360:
+        elif left < 360 and a != "hematite":
             controller.Left()
             left += 45
         else:
