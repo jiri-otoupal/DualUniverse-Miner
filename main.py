@@ -10,7 +10,9 @@ c 2021
 """
 
 import logging
+from time import sleep
 
+import pyautogui
 import pygetwindow
 from rich.console import Console
 from silence_tensorflow import silence_tensorflow
@@ -27,6 +29,7 @@ Config
 model_to_use = "ores"
 
 if __name__ == '__main__':
+    pyautogui.FAILSAFE = False
     config_logger()
     logging.info("Starting Dual TTB Bot !")
     logging.info("Loading Neural Net Model [" + model_to_use + "]... Please Wait")
@@ -61,6 +64,7 @@ if __name__ == '__main__':
     my = pygetwindow.getWindowsWithTitle(dual_windows[0])[0]
     my.activate()
     my.maximize()
+    sleep(1)
     vision = Vision(my, classifier)
     a, x = vision.what_is_ahead()
     logging.info(a + " " + str(x))
