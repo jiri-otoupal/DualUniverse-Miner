@@ -62,6 +62,8 @@ if __name__ == '__main__':
     my.activate()
     my.maximize()
     vision = Vision(my, classifier)
+    a, x = vision.what_is_ahead()
+    logging.info(a + str(x))
     while vision.what_is_ahead()[0] == "hematite":
         controller.Mine()
     logging.info("Is not Hematite")
