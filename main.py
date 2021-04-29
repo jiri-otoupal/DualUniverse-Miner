@@ -12,6 +12,7 @@ c 2021
 import logging
 import os
 import sys
+from time import sleep
 
 import pyautogui
 import pygetwindow
@@ -36,12 +37,14 @@ def get_center_area(window_area, width=150, height=300):
 
 
 def get_warning_area(window_area):
-    y, x = window_area.top, window_area.left
-    startx = x // 2 + 450
-    return startx, 720, 500, 50
+    y, x = window_area.height, window_area.width
+    startx = x // 2 - 500 // 2
+    starty = y // 1.1 - 50 // 2
+    return startx, starty, 500, 50
 
 
 if __name__ == '__main__':
+    sleep(3)
     windows = pygetwindow.getAllTitles()
     logging.info("Locating Dual Universe Window")
     dual_windows = [s for s in windows if "Dual Universe" in s]
