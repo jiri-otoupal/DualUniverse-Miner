@@ -39,25 +39,11 @@ def get_center_area(window_area, width=150, height=300):
 def get_warning_area(window_area):
     y, x = window_area.height, window_area.width
     startx = x // 2 - 500 // 2
-    starty = y // 1.1 - 50 // 2
-    return startx, starty, 500, 50
+    starty = y // 1.21 - 50 // 2
+    return startx, starty, 500, 45
 
 
 if __name__ == '__main__':
-    sleep(3)
-    windows = pygetwindow.getAllTitles()
-    logging.info("Locating Dual Universe Window")
-    dual_windows = [s for s in windows if "Dual Universe" in s]
-    if dual_windows.__len__() == 0:
-        logging.fatal("Dual Universe is not launched !")
-        exit(1)
-    for window in dual_windows:
-        logging.info("Dual Universe instances: [" + window + "]")
-    logging.info("Using First Instance")
-    my = pygetwindow.getWindowsWithTitle(dual_windows[0])[0]
-    my.activate()
-    pyautogui.screenshot("warning.png", get_center_area(my.box))
-
     config_logger()
     logging.info("Starting Dual TTB Bot !")
     logging.info("Loading Neural Net Model [" + model_to_use + "]... Please Wait")
@@ -90,5 +76,4 @@ if __name__ == '__main__':
     logging.info("Using First Instance")
     my = pygetwindow.getWindowsWithTitle(dual_windows[0])[0]
     my.activate()
-    pyautogui.screenshot("tmp.jpg", my.box)
-    pyautogui.screenshot()
+    my.maximize()
