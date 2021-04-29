@@ -28,8 +28,8 @@ Config
 model_to_use = "ores"
 
 
-def get_center_area(window_area, width=500, height=500):
-    y, x = window_area.top, window_area.left
+def get_center_area(window_area, width=150, height=300):
+    y, x = window_area.height, window_area.width
     startx = x // 2 - width // 2
     starty = y // 2 - height // 2
     return startx, starty, width, height
@@ -37,7 +37,7 @@ def get_center_area(window_area, width=500, height=500):
 
 def get_warning_area(window_area):
     y, x = window_area.top, window_area.left
-    startx = x // 2 - 500 // 2
+    startx = x // 2 + 450
     return startx, 720, 500, 50
 
 
