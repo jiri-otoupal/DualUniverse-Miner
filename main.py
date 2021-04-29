@@ -74,8 +74,8 @@ if __name__ == '__main__':
             controller.Forward(2)
         if a == "hematite":
             controller.Mine()
-        elif left < 360 and a != "hematite":
-            controller.Left()
+        elif left < 360:
+            controller.LookLeft()
             left += 45
         else:
             controller.LookDown()
