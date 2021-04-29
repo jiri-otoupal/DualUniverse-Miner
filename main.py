@@ -29,22 +29,22 @@ model_to_use = "ores"
 
 
 def get_center_area(window_area, width=500, height=500):
-    y, x = window_area
+    y, x = window_area.top, window_area.left
     startx = x // 2 - width // 2
     starty = y // 2 - height // 2
     return [[starty, starty + height], [startx, startx + width]]
 
 
 def get_warning_area(window_area):
-    y, x = window_area
+    y, x = window_area.top, window_area.left
     startx = x // 2 - 500 // 2
-    return [[800, 800 + 80], [startx, startx + 500]]
+    return startx, 720, 500, 50
 
 
 if __name__ == '__main__':
     windows = pygetwindow.getAllTitles()
     logging.info("Locating Dual Universe Window")
-    dual_windows = [s for s in windows if "dual" in s]
+    dual_windows = [s for s in windows if "Dual Universe" in s]
     if dual_windows.__len__() == 0:
         logging.fatal("Dual Universe is not launched !")
         exit(1)
@@ -53,7 +53,7 @@ if __name__ == '__main__':
     logging.info("Using First Instance")
     my = pygetwindow.getWindowsWithTitle(dual_windows[0])[0]
     my.activate()
-    pyautogui.screenshot("warning.png", get_warning_area())
+    pyautogui.screenshot("warning.png", get_warning_area(my.box))
 
     config_logger()
     logging.info("Starting Dual TTB Bot !")
