@@ -68,10 +68,14 @@ if __name__ == '__main__':
     a, x = vision.what_is_ahead()
     logging.info(a + " " + str(x))
     left = 0
+    too_far = 0
     looked_down = 0
     while True:
         if vision.too_far_away():
             controller.Forward(1)
+            too_far += 1
+        if too_far > 2:
+            controller.Jump()
         if a == "hematite":
             controller.Mine()
         elif left < 360:

@@ -145,11 +145,14 @@ def LookRight(angle: int = 45):
     ReleaseKey(Right)
 
 
+def Jump():
+    PressAndRelease(1.2, SPACE)
+
+
 def Mine():
     pyautogui.mouseDown()
     time.sleep(1.9)
     pyautogui.mouseUp()
-
 
 
 def LookUp(angle: int = 30):
