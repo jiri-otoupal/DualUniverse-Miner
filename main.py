@@ -68,6 +68,7 @@ if __name__ == '__main__':
     a, x = vision.what_is_ahead()
     logging.info(a + " " + str(x))
     left = 0
+    looked_down = 0
     while True:
         if vision.too_far_away():
             controller.Forward(2)
@@ -79,6 +80,10 @@ if __name__ == '__main__':
         else:
             controller.LookDown()
             left = 0
+            looked_down = True
+        if looked_down:
+            controller.Forward(2)
+            controller.LookUp()
         a, x = vision.what_is_ahead()
         logging.info("In front is: " + a + " " + str(x))
     logging.info("Is not Hematite")
