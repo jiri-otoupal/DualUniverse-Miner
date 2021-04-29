@@ -71,7 +71,7 @@ if __name__ == '__main__':
     looked_down = 0
     while True:
         if vision.too_far_away():
-            controller.Forward(2)
+            controller.Forward(1)
         if a == "hematite":
             controller.Mine()
         elif left < 360:
@@ -82,7 +82,7 @@ if __name__ == '__main__':
             left = 0
             looked_down = True
         if looked_down:
-            controller.Forward(2)
+            controller.Forward(1)
             controller.LookUp()
         a, x = vision.what_is_ahead()
         logging.info("In front is: " + a + " " + str(x))
