@@ -19,8 +19,8 @@ class Vision:
     def get_warning_area(self, window_area):
         y, x = window_area.height, window_area.width
         startx = x // 2 - 500 // 2
-        starty = y // 1.21 - 50 // 2
-        return startx, starty, 500, 45
+        starty = y // 1.19 - 50 // 2
+        return startx, starty, 500, 60
 
     def what_is_ahead(self):
         """
