@@ -10,7 +10,7 @@ class Vision:
         self.window = window
         self.classifier = classifier
 
-    def get_center_area(self, window_area, width=80, height=80):
+    def get_center_area(self, window_area, width=45, height=45):
         y, x = window_area.height, window_area.width
         startx = x // 2 - width // 2
         starty = y // 2 - height // 2
