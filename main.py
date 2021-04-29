@@ -32,7 +32,7 @@ def get_center_area(window_area, width=500, height=500):
     y, x = window_area.top, window_area.left
     startx = x // 2 - width // 2
     starty = y // 2 - height // 2
-    return [[starty, starty + height], [startx, startx + width]]
+    return startx, starty, width, height
 
 
 def get_warning_area(window_area):
@@ -53,7 +53,7 @@ if __name__ == '__main__':
     logging.info("Using First Instance")
     my = pygetwindow.getWindowsWithTitle(dual_windows[0])[0]
     my.activate()
-    pyautogui.screenshot("warning.png", get_warning_area(my.box))
+    pyautogui.screenshot("warning.png", get_center_area(my.box))
 
     config_logger()
     logging.info("Starting Dual TTB Bot !")
