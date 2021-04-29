@@ -1,12 +1,10 @@
 import logging
 import os
-from itertools import product
 from time import time
 
 import numpy as np
 import tensorflow as tf
-from PIL import Image
-from keras.backend import expand_dims, clear_session
+from keras.backend import expand_dims
 from keras.models import load_model
 from tensorflow import keras
 
