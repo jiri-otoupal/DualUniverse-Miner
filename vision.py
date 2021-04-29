@@ -10,7 +10,7 @@ class Vision:
         self.window = window
         self.classifier = classifier
 
-    def get_center_area(self, window_area, width=50, height=50):
+    def get_center_area(self, window_area, width=80, height=80):
         y, x = window_area.height, window_area.width
         startx = x // 2 - width // 2
         starty = y // 2 - height // 2
@@ -31,3 +31,13 @@ class Vision:
         a, x = self.classifier.predict(image_path)
         os.remove(image_path)
         return a, x
+
+    def too_far_away(self):
+        """
+        Returns type of ore ahead of player
+        """
+        image_path = "tmp.png"
+        pyautogui.screenshot(image_path, region=self.get_warning_area(self.window))
+        a, x = self.classifier.predict(image_path)
+        os.remove(image_path)
+        return a == "warning" and x > 0.5

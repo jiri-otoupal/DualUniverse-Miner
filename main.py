@@ -67,9 +67,18 @@ if __name__ == '__main__':
     vision = Vision(my, classifier)
     a, x = vision.what_is_ahead()
     logging.info(a + " " + str(x))
+    left = 0
     while True:
+        if vision.too_far_away():
+            controller.Forward(2)
         if a == "hematite":
             controller.Mine()
+        elif left < 360:
+            controller.Left()
+            left += 45
+        else:
+            controller.LookDown()
+            left = 0
         a, x = vision.what_is_ahead()
         logging.info("In front is: " + a + " " + str(x))
     logging.info("Is not Hematite")
