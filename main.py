@@ -10,11 +10,7 @@ c 2021
 """
 
 import logging
-import os
-import sys
-from time import sleep
 
-import pyautogui
 import pygetwindow
 from rich.console import Console
 from silence_tensorflow import silence_tensorflow
@@ -44,13 +40,14 @@ if __name__ == '__main__':
         logging.critical("Failed to load Model !")
         exit(1)
     logging.info("Loaded Model Successfully !")
-    logging.info("Neural net Warmed Up !")
+    logging.info("Warming Up Neural Net !")
     console = Console()
     tasks = [f"Warming up Neural Net {n}" for n in range(1, 5)]
     with console.status("[bold green]Predicting... ") as status:
         while tasks:
             c, confidence = classifier.predict("samples/test_sample.png")
             tasks.pop(0)
+    logging.info("Neural net Warmed Up !")
     logging.info("Current Time of Prediction: " + classifier.time.__str__() + " seconds")
     logging.info("Launching Bot")
     windows = pygetwindow.getAllTitles()
