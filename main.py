@@ -62,7 +62,6 @@ if __name__ == '__main__':
         logging.info("Dual Universe instances: [" + window + "]")
     logging.info("Using First Instance")
     my = pygetwindow.getWindowsWithTitle(dual_windows[0])[0]
-    my.activate()
     my.maximize()
     sleep(1)
     vision = Vision(my, classifier)
