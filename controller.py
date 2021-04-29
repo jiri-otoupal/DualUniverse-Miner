@@ -1,6 +1,8 @@
 import ctypes
 import time
 
+import pyautogui as pyautogui
+
 SendInput = ctypes.windll.user32.SendInput
 
 W = 0x11
@@ -9,6 +11,15 @@ S = 0x1F
 D = 0x20
 
 SPACE = 0x39
+
+# Switching tools
+harvest_tool = 0x02  # Slot 1
+mining_tool = 0x03  # Slot 2
+scanner_tool = 0x04  # Slot 3
+detector_tool = 0x05  # Slot 4
+
+# Opening inventory
+open_inventory = 0x17  # Slot i
 
 # Bind these to Camera in Dual Universe XD
 Down = 0x50
@@ -102,6 +113,26 @@ def GoRight(t: float):
     PressAndRelease(t, D)
 
 
+def SwitchToHarvest(t: float):
+    PressAndRelease(t, harvest_tool)
+
+
+def SwitchToMining(t: float):
+    PressAndRelease(t, mining_tool)
+
+
+def SwitchToScanner(t: float):
+    PressAndRelease(t, scanner_tool)
+
+
+def SwitchToDetector(t: float):
+    PressAndRelease(t, detector_tool)
+
+
+def OpenInventory(t: float):
+    PressAndRelease(t, open_inventory)
+
+
 def LookLeft(angle: int = 45):
     PressKey(Left)
     time.sleep((1.79 / 360) * angle)
@@ -112,6 +143,13 @@ def LookRight(angle: int = 45):
     PressKey(Right)
     time.sleep((1.79 / 360) * angle)
     ReleaseKey(Right)
+
+
+def Mine():
+    pyautogui.mouseDown()
+    time.sleep(1.9)
+    pyautogui.mouseUp()
+
 
 
 def LookUp(angle: int = 30):
@@ -128,7 +166,6 @@ def LookDown(angle: int = 30):
 
 if __name__ == '__main__':
     time.sleep(3)
-    LookUp()
-    LookDown()
-    LookLeft()
-    LookRight()
+    pyautogui.mouseDown()
+    time.sleep(1.9)
+    pyautogui.mouseUp()
