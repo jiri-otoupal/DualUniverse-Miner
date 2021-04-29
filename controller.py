@@ -1,7 +1,7 @@
 import ctypes
 import time
 
-import pyautogui as pyautogui
+import pyautogui
 
 SendInput = ctypes.windll.user32.SendInput
 
@@ -166,6 +166,7 @@ def LookDown(angle: int = 30):
 
 if __name__ == '__main__':
     time.sleep(3)
-    pyautogui.mouseDown()
-    time.sleep(1.9)
-    pyautogui.mouseUp()
+    LookUp()
+    LookDown()
+    LookLeft()
+    LookRight()

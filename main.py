@@ -15,7 +15,9 @@ import pygetwindow
 from rich.console import Console
 from silence_tensorflow import silence_tensorflow
 
+import controller
 from logger import config_logger
+from vision import Vision
 
 """
 Config
@@ -23,9 +25,6 @@ Config
 """
 
 model_to_use = "ores"
-
-
-
 
 if __name__ == '__main__':
     config_logger()
@@ -62,3 +61,6 @@ if __name__ == '__main__':
     my = pygetwindow.getWindowsWithTitle(dual_windows[0])[0]
     my.activate()
     my.maximize()
+    vision = Vision(my, classifier)
+    while vision.what_is_ahead()[0] == "hematite":
+        controller.Mine()
