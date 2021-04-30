@@ -49,7 +49,7 @@ if __name__ == '__main__':
         while tasks:
             c, confidence = classifier.predict("samples/test_sample.png")
             tasks.pop(0)
-    logging.info("Neural net Warmed Up !")
+    logging.info("Neural net Warmed Up")
     logging.info("Current Time of Prediction: " + classifier.time.__str__() + " seconds")
     logging.info("Launching Bot")
     windows = pygetwindow.getAllTitles()
@@ -74,8 +74,10 @@ if __name__ == '__main__':
         if vision.too_far_away():
             controller.Forward(1)
             too_far += 1
-        if too_far > 2:
+        if too_far > 1:
             controller.Jump()
+            too_far = 0
+            logging.info("Doing jump to get over obstacle")
         if a == "hematite":
             controller.Mine()
         elif left < 360:
