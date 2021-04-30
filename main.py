@@ -75,7 +75,7 @@ if __name__ == '__main__':
             controller.Forward(1)
             too_far += 1
             logging.info("Ore too far going forward jumping in " + str(2 - too_far))
-        if too_far > 1:
+        if too_far > 2:
             controller.Jump()
             too_far = 0
             logging.info("Doing jump to get over obstacle")
