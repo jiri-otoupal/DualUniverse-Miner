@@ -74,6 +74,7 @@ if __name__ == '__main__':
         if vision.too_far_away():
             controller.Forward(1)
             too_far += 1
+            logging.info("Ore too far going forward jumping in " + str(2 - too_far))
         if too_far > 1:
             controller.Jump()
             too_far = 0
