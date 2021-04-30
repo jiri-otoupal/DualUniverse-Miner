@@ -4,9 +4,9 @@ from time import time
 
 import numpy as np
 import tensorflow as tf
-from keras.backend import expand_dims
-from keras.models import load_model
 from tensorflow import keras
+from tensorflow.python.keras.backend import expand_dims
+from tensorflow.python.keras.models import load_model
 
 
 class Classifier:
@@ -14,7 +14,7 @@ class Classifier:
     def __init__(self, model):
         self.time = 0
         self.model = load_model(model)
-        self.class_names = ['bauxite', 'blue', 'coal', 'hematite', 'lacobus', 'quartz', 'warning']
+        self.class_names = ['bauxite', 'blue', 'coal', 'hematite', 'lacobus', 'quartz', 'warning', 'waypoint']
 
     def predict(self, path_to_img) -> [str, float]:
         """

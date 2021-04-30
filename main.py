@@ -25,7 +25,7 @@ Config
 
 """
 
-model_to_use = "ores"
+model_to_use = "models/ores"
 
 if __name__ == '__main__':
     pyautogui.FAILSAFE = False

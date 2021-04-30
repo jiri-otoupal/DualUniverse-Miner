@@ -1,4 +1,3 @@
-
 import numpy as np
 import tensorflow as tf
 
@@ -6,6 +5,8 @@ from tensorflow import keras
 from tensorflow.keras import layers
 from tensorflow.keras.models import Sequential
 
+model_name = "models/ores_pk_v1_aug"
+epochs = 500
 batch_size = 32
 img_height = 32
 img_width = 32
@@ -14,16 +15,17 @@ data_dir = "images"
 train_ds = tf.keras.preprocessing.image_dataset_from_directory(
     data_dir,
     validation_split=0.2,
+    seed=4621301,
     subset="training",
-    seed=123,
     image_size=(img_height, img_width),
     batch_size=batch_size)
+
 
 val_ds = tf.keras.preprocessing.image_dataset_from_directory(
     data_dir,
     validation_split=0.2,
+    seed=1231657,
     subset="validation",
-    seed=123,
     image_size=(img_height, img_width),
     batch_size=batch_size)
 
@@ -39,16 +41,15 @@ first_image = image_batch[0]
 # Notice the pixels values are now in `[0,1]`.
 print(np.min(first_image), np.max(first_image))
 
-
 data_augmentation = keras.Sequential(
     [
         layers.experimental.preprocessing.RandomFlip("horizontal_and_vertical",
                                                      input_shape=(img_height,
                                                                   img_width,
                                                                   3)),
-        layers.experimental.preprocessing.RandomRotation(0.2),
-        layers.experimental.preprocessing.RandomZoom(0.2),
-        layers.experimental.preprocessing.RandomContrast(0.2),
+        layers.experimental.preprocessing.RandomRotation(15),
+        layers.experimental.preprocessing.RandomZoom(0.5),
+        layers.experimental.preprocessing.RandomContrast(0.5),
     ]
 )
 model = Sequential([
@@ -62,24 +63,23 @@ model = Sequential([
     layers.MaxPooling2D(),
     layers.Conv2D(128, 3, padding='same', activation='relu'),
     layers.MaxPooling2D(),
-    layers.Dropout(0.2),
+    layers.Conv2D(256, 3, padding='same', activation='gelu'),
+    layers.MaxPooling2D(),
+    layers.Dropout(0.1),
     layers.Flatten(),
     layers.Dense(256, activation='relu'),
     layers.Dense(num_classes)
-    #layers.Dense(num_classes, "softmax")
 ])
 
 model.compile(optimizer='nadam',
-              #loss=tf.keras.losses.SparseCategoricalCrossentropy(),
               loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
               metrics=['accuracy'])
 model.summary()
 
-epochs = 50
 history = model.fit(
     train_ds,
     validation_data=val_ds,
-    epochs=epochs
+    epochs=epochs, use_multiprocessing=True, workers=8
 )
-model.trainable = False
-model.save("ores")
+
+model.save(model_name)
