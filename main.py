@@ -42,7 +42,7 @@ if __name__ == '__main__':
         logging.critical("Failed to load Model !")
         exit(1)
     logging.info("Loaded Model Successfully !")
-    logging.info("Warming Up Neural Net !")
+    logging.info("Warming Up Neural Net")
     console = Console()
     tasks = [f"Warming up Neural Net {n}" for n in range(1, 5)]
     with console.status("[bold green]Predicting... ") as status:
