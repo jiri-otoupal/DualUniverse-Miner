@@ -18,7 +18,7 @@ from silence_tensorflow import silence_tensorflow
 
 import controller
 from ControlDispatcher import ControlDispatcher
-from config import model_to_use, log_level
+from config import model_to_use, log_level, full_auto
 from logger import config_logger
 
 if __name__ == '__main__':
@@ -67,10 +67,12 @@ if __name__ == '__main__':
     controller.SwitchToHarvest(0.05)
     controller.SwitchToMining(0.05)
     logging.info("Maximizing Mining Circle")
-    controller.maximize_mining_circle()
+    if full_auto:
+        controller.maximize_mining_circle()
     logging.info("Maximized")
     vision = Vision(my, classifier, dispatcher)
     dispatcher.start()
     vision.start()
     while dispatcher.t1.is_alive():
         sleep(1)
+    my.minimize()

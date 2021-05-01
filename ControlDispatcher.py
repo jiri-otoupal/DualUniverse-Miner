@@ -7,7 +7,7 @@ from time import sleep
 class ControlDispatcher:
 
     def __init__(self):
-        self.stopped = False
+        self.stopped = True
         self.camera_queue = Queue()
         self.movement_queue = Queue()
         self.jump_queue = Queue()
