@@ -42,7 +42,7 @@ class Vision:
                 self.dispatcher.request_tool_event(controller.Mine)
                 logging.debug("Clearing Movement and Rotation")
                 self.dispatcher.clear_movement_rotation()
-            if warning_tfa and self.too_f_away_counter > 3:
+            elif warning_tfa and self.too_f_away_counter > 3:
                 self.too_f_away_counter = 0
                 if not self.rotate_to_closest_ore():
                     self.dispatcher.request_rotate(lambda: controller.LookRight(90))
