@@ -52,6 +52,7 @@ class Vision:
                 self.dispatcher.request_jump(controller.Jump)
                 self.dispatcher.request_movement(lambda: controller.Forward(forward_time))
             else:
+                logging.info("Rotating to closest ore")
                 self.too_f_away_counter = 0
                 self.rotate_to_closest_ore()
 
@@ -72,6 +73,8 @@ class Vision:
             logging.info("Requesting Rotation Down")
             self.dispatcher.request_rotate(lambda: controller.LookDown(rotation_angle))
             return -1
+        logging.info("Did not found ore... Rotating Right")
+        self.dispatcher.request_rotate(lambda: controller.LookRight(rotation_angle))
         return False
 
     def get_center_area(self, width=25, height=25):
