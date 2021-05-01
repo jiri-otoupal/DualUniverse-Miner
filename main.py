@@ -70,7 +70,7 @@ if __name__ == '__main__':
     dispatcher.start()
     vision.start()
     my.maximize()
-    sleep(0.5)
+    sleep(0.1)
     controller.SwitchToHarvest(0.05)
     controller.SwitchToMining(0.05)
     logging.info("Maximizing Mining Circle")
