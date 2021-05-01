@@ -9,6 +9,7 @@ c 2021
 
 """
 import logging
+from time import sleep
 
 import keyboard as keyboard
 import pyautogui
@@ -69,3 +70,5 @@ if __name__ == '__main__':
     vision = Vision(my, classifier, dispatcher)
     dispatcher.start()
     vision.start()
+    while not dispatcher.stopped:
+        sleep(1)

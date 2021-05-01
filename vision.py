@@ -56,19 +56,19 @@ class Vision:
 
     def rotate_to_closest_ore(self):
         if self.what_is_in_area(self.get_left_area())[0] in ore_list:
-            logging.debug("Requesting Rotation Up")
+            logging.info("Requesting Rotation Up")
             self.dispatcher.request_rotate(lambda: controller.LookLeft(10))
             return 2
         if self.what_is_in_area(self.get_right_area())[0] in ore_list:
-            logging.debug("Requesting Rotation Right")
+            logging.info("Requesting Rotation Right")
             self.dispatcher.request_rotate(lambda: controller.LookRight(10))
             return -2
         if self.what_is_in_area(self.get_top_area())[0] in ore_list:
-            logging.debug("Requesting Rotation Up")
+            logging.info("Requesting Rotation Up")
             self.dispatcher.request_rotate(lambda: controller.LookUp(10))
             return 1
         if self.what_is_in_area(self.get_bottom_area())[0] in ore_list:
-            logging.debug("Requesting Rotation Down")
+            logging.info("Requesting Rotation Down")
             self.dispatcher.request_rotate(lambda: controller.LookDown(10))
             return -1
         return False
