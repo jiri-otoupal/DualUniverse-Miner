@@ -4,9 +4,10 @@ import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
 from tensorflow.keras.models import Sequential
+from tensorflow.python.keras.preprocessing.image import ImageDataGenerator
 
 model_name = "models/ores_pk_v1_aug"
-epochs = 500
+epochs = 100
 batch_size = 32
 img_height = 32
 img_width = 32
@@ -20,7 +21,6 @@ train_ds = tf.keras.preprocessing.image_dataset_from_directory(
     image_size=(img_height, img_width),
     batch_size=batch_size)
 
-
 val_ds = tf.keras.preprocessing.image_dataset_from_directory(
     data_dir,
     validation_split=0.2,
@@ -28,6 +28,22 @@ val_ds = tf.keras.preprocessing.image_dataset_from_directory(
     subset="validation",
     image_size=(img_height, img_width),
     batch_size=batch_size)
+
+train_datagen = ImageDataGenerator(
+    rescale=1. / 255,
+    brightness_range=[0.2, 0.8])
+
+test_datagen = ImageDataGenerator(rescale=1. / 255)
+train_generator = train_datagen.flow_from_directory(
+    data_dir,
+    target_size=(32, 32), color_mode='rgb', shuffle=True,
+    seed=42, class_mode="sparse",
+    batch_size=32)
+validation_generator = test_datagen.flow_from_directory(
+    data_dir,
+    target_size=(32, 32), color_mode='rgb', shuffle=True,
+    seed=12, class_mode="sparse",
+    batch_size=32)
 
 AUTOTUNE = tf.data.AUTOTUNE
 print(train_ds.class_names)
@@ -48,8 +64,8 @@ data_augmentation = keras.Sequential(
                                                                   img_width,
                                                                   3)),
         layers.experimental.preprocessing.RandomRotation(15),
-        layers.experimental.preprocessing.RandomZoom(0.5),
-        layers.experimental.preprocessing.RandomContrast(0.5),
+        layers.experimental.preprocessing.RandomZoom(0.3),
+        layers.experimental.preprocessing.RandomContrast(0.1),
     ]
 )
 model = Sequential([
@@ -62,8 +78,6 @@ model = Sequential([
     layers.Conv2D(64, 3, padding='same', activation='relu'),
     layers.MaxPooling2D(),
     layers.Conv2D(128, 3, padding='same', activation='relu'),
-    layers.MaxPooling2D(),
-    layers.Conv2D(256, 3, padding='same', activation='gelu'),
     layers.MaxPooling2D(),
     layers.Dropout(0.1),
     layers.Flatten(),
@@ -79,7 +93,12 @@ model.summary()
 history = model.fit(
     train_ds,
     validation_data=val_ds,
-    epochs=epochs, use_multiprocessing=True, workers=8
+    epochs=epochs, use_multiprocessing=True
 )
+
+model.fit(
+    train_generator, batch_size=batch_size,
+    epochs=epochs,
+    validation_data=val_ds)
 
 model.save(model_name)

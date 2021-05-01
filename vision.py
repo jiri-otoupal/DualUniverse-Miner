@@ -1,43 +1,127 @@
+import logging
 import os
+from threading import Thread
 
 import pyautogui
+
+import controller
+from config import ore_list
 
 
 class Vision:
     from classifier_predict import Classifier
 
-    def __init__(self, window, classifier: Classifier):
+    from ControlDispatcher import ControlDispatcher
+
+    def __init__(self, window, classifier: Classifier, dispatcher: ControlDispatcher):
         self.window = window
         self.classifier = classifier
+        self.dispatcher = dispatcher
+        self.too_f_away_counter = 0
+        self.angle_sum = 0
 
-    def get_center_area(self, window_area, width=45, height=45):
-        y, x = window_area.height, window_area.width
+    def start(self):
+        Thread(target=self._recognize_in_loop_center).start()
+
+    def _rotate_camera_left(self):
+        angles = 10
+        self.dispatcher.request_rotate(lambda: controller.LookLeft(angles))
+        self.angle_sum -= angles
+
+    def _rotate_camera_right(self):
+        angles = 10
+        self.dispatcher.request_rotate(lambda: controller.LookRight(angles))
+        self.angle_sum += angles
+
+    def _recognize_in_loop_center(self):
+        while not self.dispatcher.stopped:
+            ore_type, confidence = self.what_is_in_area()
+            is_ore = ore_type in ore_list
+            if is_ore:
+                logging.info("Requesting Mine of " + ore_type)
+                self.dispatcher.request_tool_event(controller.Mine)
+                logging.debug("Clearing Movement and Rotation")
+                self.dispatcher.clear_movement_rotation()
+            if self.too_far_away() and self.too_f_away_counter > 3:
+                self.too_f_away_counter = 0
+                if not self.rotate_to_closest_ore():
+                    self.dispatcher.request_rotate(lambda: controller.LookRight(90))
+                    logging.debug("Requesting Rotation Right Because none ore was found")
+            elif self.too_far_away() and self.too_f_away_counter > 0:
+                self.dispatcher.request_jump(controller.Jump)
+                self.dispatcher.request_movement(lambda: controller.Forward(1))
+            else:
+                self.too_f_away_counter = 0
+                self.rotate_to_closest_ore()
+
+    def rotate_to_closest_ore(self):
+        if self.what_is_in_area(self.get_left_area())[0] in ore_list:
+            logging.debug("Requesting Rotation Up")
+            self.dispatcher.request_rotate(lambda: controller.LookLeft(10))
+            return 2
+        if self.what_is_in_area(self.get_right_area())[0] in ore_list:
+            logging.debug("Requesting Rotation Right")
+            self.dispatcher.request_rotate(lambda: controller.LookRight(10))
+            return -2
+        if self.what_is_in_area(self.get_top_area())[0] in ore_list:
+            logging.debug("Requesting Rotation Up")
+            self.dispatcher.request_rotate(lambda: controller.LookUp(10))
+            return 1
+        if self.what_is_in_area(self.get_bottom_area())[0] in ore_list:
+            logging.debug("Requesting Rotation Down")
+            self.dispatcher.request_rotate(lambda: controller.LookDown(10))
+            return -1
+        return False
+
+    def get_center_area(self, width=45, height=45):
+        y, x = self.window.height, self.window.width
         startx = x // 2 - width // 2
         starty = y // 2 - height // 2
         return startx, starty, width, height
 
-    def get_warning_area(self, window_area):
-        y, x = window_area.height, window_area.width
+    def get_left_area(self, width=300):
+        startx = 0
+        starty = 0
+        return startx, starty, width, self.window.height
+
+    def get_right_area(self, width=300):
+        startx = self.window.width - 100
+        starty = 0
+        return startx, starty, width, self.window.height
+
+    def get_top_area(self, width=300):
+        startx = 100
+        starty = 0
+        return startx, starty, self.window.width - width, width
+
+    def get_bottom_area(self, width=200):
+        startx = 100
+        return startx, self.window.height - width * 2, self.window.width - width, width
+
+    def get_warning_area(self):
+        y, x = self.window.height, self.window.width
         startx = x // 2 - 500 // 2
         starty = y // 1.21 - 50 // 2
         return startx, starty, 500, 45
 
-    def what_is_ahead(self):
+    def what_is_in_area(self, screen_region=None):
         """
         Returns type of ore ahead of player
         """
         image_path = "tmp.png"
-        pyautogui.screenshot(image_path, region=self.get_center_area(self.window))
-        a, x = self.classifier.predict(image_path)
+        if screen_region is None:
+            screen_region = self.get_center_area()
+        pyautogui.screenshot(image_path, region=screen_region)
+        ore_type, confidence = self.classifier.predict(image_path)
         os.remove(image_path)
-        return a, x
+        return ore_type, confidence
 
     def too_far_away(self):
         """
         Returns type of ore ahead of player
         """
         image_path = "tmp.png"
-        pyautogui.screenshot(image_path, region=self.get_warning_area(self.window))
+        pyautogui.screenshot(image_path, region=self.get_warning_area())
         a, x = self.classifier.predict(image_path)
         os.remove(image_path)
         return a == "warning" and x > 0.5

@@ -14,7 +14,7 @@ class Classifier:
     def __init__(self, model):
         self.time = 0
         self.model = load_model(model)
-        self.class_names = ['bauxite', 'blue', 'coal', 'hematite', 'lacobus', 'quartz', 'warning', 'waypoint']
+        self.class_names = ['bauxite', 'blue', 'coal', 'hematite', 'quartz', 'terrain', 'warning', 'waypoint']
 
     def predict(self, path_to_img) -> [str, float]:
         """

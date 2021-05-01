@@ -8,28 +8,45 @@ Copyright Jiri Otoupal, Dominik Deak
 c 2021
 
 """
-
+import curses
 import logging
-from time import sleep
 
+import keyboard as keyboard
+import npyscreen
 import pyautogui
 import pygetwindow
 from rich.console import Console
 from silence_tensorflow import silence_tensorflow
 
 import controller
+from ControlDispatcher import ControlDispatcher
+from config import model_to_use, log_level
 from logger import config_logger
 
-"""
-Config
 
-"""
+def get_instance():
+    stdscr = curses.initscr()
 
-model_to_use = "models/ores"
+    Options = npyscreen.OptionList()
+
+    # just for convenience so we don't have to keep writing Options.options
+    options = Options.options
+    options.append(
+        npyscreen.OptionMultiChoice('Select Dual Universe Instance', choices=['Choice 1', 'Choice 2', 'Choice 3']))
+
+    F = npyscreen.Form(name="Welcome to Npyscreen", )
+    ms = F.add(npyscreen.OptionListDisplay, name="Option List",
+               values=options,
+               scroll_exit=True,
+               max_height=None)
+
+    F.edit()
+
 
 if __name__ == '__main__':
+
     pyautogui.FAILSAFE = False
-    config_logger()
+    config_logger(log_level)
     logging.info("Starting Dual TTB Bot !")
     logging.info("Loading Neural Net Model [" + model_to_use + "]... Please Wait")
     silence_tensorflow()
@@ -38,8 +55,9 @@ if __name__ == '__main__':
 
     try:
         classifier = Classifier(model_to_use)
-    except:
+    except Exception as ex:
         logging.critical("Failed to load Model !")
+        logging.debug(ex.__str__())
         exit(1)
     logging.info("Loaded Model Successfully !")
     logging.info("Warming Up Neural Net")
@@ -48,6 +66,8 @@ if __name__ == '__main__':
     with console.status("[bold green]Predicting... ") as status:
         while tasks:
             c, confidence = classifier.predict("samples/test_sample.png")
+            if c != "hematite":
+                logging.fatal("Test Sample is incorrectly identified as " + c + " !")
             tasks.pop(0)
     logging.info("Neural net Warmed Up")
     logging.info("Current Time of Prediction: " + classifier.time.__str__() + " seconds")
@@ -58,39 +78,16 @@ if __name__ == '__main__':
     if dual_windows.__len__() == 0:
         logging.fatal("Dual Universe is not launched !")
         exit(1)
+        logging.info("Using First Instance")
     for window in dual_windows:
         logging.info("Dual Universe instances: [" + window + "]")
-    logging.info("Using First Instance")
     my = pygetwindow.getWindowsWithTitle(dual_windows[0])[0]
     my.maximize()
-    sleep(1)
-    vision = Vision(my, classifier)
-    a, x = vision.what_is_ahead()
-    logging.info(a + " " + str(x))
-    left = 0
-    too_far = 0
-    looked_down = 0
-    while True:
-        if vision.too_far_away():
-            controller.Forward(1)
-            too_far += 1
-            logging.info("Ore too far going forward jumping in " + str(2 - too_far))
-        if too_far > 2:
-            controller.Jump()
-            too_far = 0
-            logging.info("Doing jump to get over obstacle")
-        if a == "hematite":
-            controller.Mine()
-        elif left < 360:
-            controller.LookLeft()
-            left += 45
-        else:
-            controller.LookDown()
-            left = 0
-            looked_down = True
-        if looked_down:
-            controller.Forward(1)
-            controller.LookUp()
-        a, x = vision.what_is_ahead()
-        logging.info("In front is: " + a + " " + str(x))
-    logging.info("Is not Hematite")
+    dispatcher = ControlDispatcher()
+    keyboard.hook(dispatcher.stop)
+    # TODO: pass function that will be called if is too far away and if see ore
+    controller.SwitchToMining(0.05)
+    pyautogui.scroll(100)
+    vision = Vision(my, classifier, dispatcher)
+    dispatcher.start()
+    vision.start()
