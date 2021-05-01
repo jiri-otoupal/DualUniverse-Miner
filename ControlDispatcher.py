@@ -20,10 +20,14 @@ class ControlDispatcher:
     def start(self):
         self.stopped = False
         logging.info("Started Control Dispatcher")
-        self.t1 = Thread(target=self.__update_rotate, daemon=True).start()
-        self.t2 = Thread(target=self.__update_position, daemon=True).start()
-        self.t3 = Thread(target=self.__update_jump, daemon=True).start()
-        self.t4 = Thread(target=self.__update_tool, daemon=True).start()
+        self.t1 = Thread(target=self.__update_rotate, name="Rotate", daemon=True)
+        self.t2 = Thread(target=self.__update_position, name="Position", daemon=True)
+        self.t3 = Thread(target=self.__update_jump, name="Tool", daemon=True)
+        self.t4 = Thread(target=self.__update_tool, name="Jump", daemon=True)
+        self.t1.start()
+        self.t2.start()
+        self.t3.start()
+        self.t4.start()
 
     def stop(self, a=None, b=None):
         self.stopped = True
