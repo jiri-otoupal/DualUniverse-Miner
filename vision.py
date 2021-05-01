@@ -144,4 +144,5 @@ class Vision:
         if a == "warning" and x > 0.5:
             self.too_f_away_counter += 1
             return True
+        self.too_f_away_counter = 0
         return False
