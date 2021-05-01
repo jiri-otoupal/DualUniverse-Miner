@@ -8,11 +8,9 @@ Copyright Jiri Otoupal, Dominik Deak
 c 2021
 
 """
-import curses
 import logging
 
 import keyboard as keyboard
-import npyscreen
 import pyautogui
 import pygetwindow
 from rich.console import Console
@@ -22,26 +20,6 @@ import controller
 from ControlDispatcher import ControlDispatcher
 from config import model_to_use, log_level
 from logger import config_logger
-
-
-def get_instance():
-    stdscr = curses.initscr()
-
-    Options = npyscreen.OptionList()
-
-    # just for convenience so we don't have to keep writing Options.options
-    options = Options.options
-    options.append(
-        npyscreen.OptionMultiChoice('Select Dual Universe Instance', choices=['Choice 1', 'Choice 2', 'Choice 3']))
-
-    F = npyscreen.Form(name="Welcome to Npyscreen", )
-    ms = F.add(npyscreen.OptionListDisplay, name="Option List",
-               values=options,
-               scroll_exit=True,
-               max_height=None)
-
-    F.edit()
-
 
 if __name__ == '__main__':
 
