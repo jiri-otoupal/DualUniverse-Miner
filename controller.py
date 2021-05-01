@@ -18,6 +18,10 @@ mining_tool = 0x03  # Slot 2
 scanner_tool = 0x04  # Slot 3
 detector_tool = 0x05  # Slot 4
 
+# Misc
+ctrl_key = 0x11
+alt_key = 0x12
+
 # Opening inventory
 open_inventory = 0x17  # Slot i
 

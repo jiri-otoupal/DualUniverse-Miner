@@ -6,7 +6,7 @@ from tensorflow.keras import layers
 from tensorflow.keras.models import Sequential
 from tensorflow.python.keras.preprocessing.image import ImageDataGenerator
 
-model_name = "models/ores_pk_v1_aug"
+model_name = "models/ores_pk_v2_aug"
 epochs = 100
 batch_size = 32
 img_height = 32
@@ -31,7 +31,7 @@ val_ds = tf.keras.preprocessing.image_dataset_from_directory(
 
 train_datagen = ImageDataGenerator(
     rescale=1. / 255,
-    brightness_range=[0.2, 0.8])
+    brightness_range=[0.8, 1.2])
 
 test_datagen = ImageDataGenerator(rescale=1. / 255)
 train_generator = train_datagen.flow_from_directory(
@@ -65,7 +65,7 @@ data_augmentation = keras.Sequential(
                                                                   3)),
         layers.experimental.preprocessing.RandomRotation(15),
         layers.experimental.preprocessing.RandomZoom(0.3),
-        layers.experimental.preprocessing.RandomContrast(0.1),
+        layers.experimental.preprocessing.RandomContrast(0.2),
     ]
 )
 model = Sequential([
@@ -77,11 +77,13 @@ model = Sequential([
     layers.MaxPooling2D(),
     layers.Conv2D(64, 3, padding='same', activation='relu'),
     layers.MaxPooling2D(),
-    layers.Conv2D(128, 3, padding='same', activation='relu'),
+    layers.Conv2D(128, 3, padding='same', activation='elu'),
+    layers.MaxPooling2D(),
+    layers.Conv2D(256, 3, padding='same', activation='gelu'),
     layers.MaxPooling2D(),
     layers.Dropout(0.1),
     layers.Flatten(),
-    layers.Dense(256, activation='relu'),
+    layers.Dense(256, activation='gelu'),
     layers.Dense(num_classes)
 ])
 
@@ -95,6 +97,7 @@ history = model.fit(
     validation_data=val_ds,
     epochs=epochs, use_multiprocessing=True
 )
+model.save(model_name)
 
 model.fit(
     train_generator, batch_size=batch_size,
@@ -102,3 +105,6 @@ model.fit(
     validation_data=val_ds)
 
 model.save(model_name)
+
+scores = model.evaluate(train_ds, val_ds, verbose=0)
+print("Accuracy: %.2f%%" % (scores[1] * 100))
