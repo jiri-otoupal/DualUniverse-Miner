@@ -46,6 +46,9 @@ if __name__ == '__main__':
             c, confidence = classifier.predict("samples/test_sample.png")
             if c != "hematite":
                 logging.fatal("Test Sample is incorrectly identified as " + c + " !")
+            c, confidence = classifier.predict("samples/lacobus_test.png")
+            if c != "terrain":
+                logging.fatal("Test Sample is incorrectly identified as " + c + " !")
             tasks.pop(0)
     logging.info("Neural net Warmed Up")
     logging.info("Current Time of Prediction: " + classifier.time.__str__() + " seconds")
