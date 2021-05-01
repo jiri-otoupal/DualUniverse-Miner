@@ -127,7 +127,7 @@ class Vision:
 
     def get_bottom_area(self, width=300):
         startx = 300
-        return startx, self.window.height - width * 1.4, self.window.width - width, width
+        return startx, self.window.height - width * 2, self.window.width - width, 500
 
     def get_warning_area(self):
         y, x = self.window.height, self.window.width
@@ -155,6 +155,7 @@ class Vision:
         pyautogui.screenshot(image_path, region=self.get_warning_area())
         a, x = self.classifier.predict(image_path)
         os.remove(image_path)
+        logging.info("In warning area: " + a)
         if a == "warning" and x > 0.5:
             self.too_f_away_counter += 1
             return True
