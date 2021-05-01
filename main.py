@@ -67,10 +67,10 @@ if __name__ == '__main__':
     dispatcher = ControlDispatcher(my)
     keyboard.hook(dispatcher.stop)
     # TODO: pass function that will be called if is too far away and if see ore
+    my.maximize()
     vision = Vision(my, classifier, dispatcher)
     dispatcher.start()
     vision.start()
-    my.maximize()
     sleep(0.1)
     controller.SwitchToHarvest(0.05)
     controller.SwitchToMining(0.05)
