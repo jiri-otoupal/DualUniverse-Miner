@@ -60,19 +60,20 @@ if __name__ == '__main__':
     for window in dual_windows:
         logging.info("Dual Universe instances: [" + window + "]")
     my = pygetwindow.getWindowsWithTitle(dual_windows[0])[0]
-    my.maximize()
     dispatcher = ControlDispatcher()
     # keyboard.hook(dispatcher.stop)
     # TODO: pass function that will be called if is too far away and if see ore
+    vision = Vision(my, classifier, dispatcher)
+    dispatcher.start()
+    vision.start()
+    my.maximize()
+    sleep(0.5)
     controller.SwitchToHarvest(0.05)
     controller.SwitchToMining(0.05)
     logging.info("Maximizing Mining Circle")
     if full_auto:
         controller.maximize_mining_circle()
     logging.info("Maximized")
-    vision = Vision(my, classifier, dispatcher)
-    dispatcher.start()
-    vision.start()
     while dispatcher.t1.is_alive():
         sleep(1)
     my.minimize()

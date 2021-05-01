@@ -2,6 +2,7 @@ import logging
 import os
 from threading import Thread
 
+import numpy as np
 import pyautogui
 
 import controller
@@ -58,25 +59,36 @@ class Vision:
                 self.rotate_to_closest_ore()
 
     def rotate_to_closest_ore(self):
-        if self.what_is_in_area(self.get_left_area())[0] in ore_list:
+        left = np.array([self.what_is_in_area(self.get_left_area())] + ["left"], dtype=object)
+        right = np.array([self.what_is_in_area(self.get_right_area())] + ["right"], dtype=object)
+        top = np.array([self.what_is_in_area(self.get_top_area())] + ["top"], dtype=object)
+        bottom = np.array([self.what_is_in_area(self.get_bottom_area())] + ["bottom"], dtype=object)
+        zipped = np.vstack([left, right, top, bottom])
+        by_confidence = np.flip(zipped[np.argsort(zipped[:, 1])])
+        by_confidence[:, 2] = by_confidence[:, 2] == ore_list
+        highest = by_confidence[0]
+
+        if highest[0] == "left" and highest[2]:
             logging.info("Requesting Rotation Left")
             self.dispatcher.request_rotate(lambda: controller.LookLeft(rotation_angle))
             self.angle_sum -= 1
             return 2
-        elif self.what_is_in_area(self.get_right_area())[0] in ore_list:
+        elif highest[0] == "right" and highest[2]:
             logging.info("Requesting Rotation Right")
             self.dispatcher.request_rotate(lambda: controller.LookRight(rotation_angle))
             self.angle_sum += 1
             return -2
-        elif self.what_is_in_area(self.get_top_area())[0] in ore_list:
+        elif highest[0] == "up" and highest[2]:
             logging.info("Requesting Rotation Up")
             self.dispatcher.request_rotate(lambda: controller.LookUp(rotation_angle))
+            self.angle_sum = 0
             self.angle_down -= 1
             return 1
-        elif self.what_is_in_area(self.get_bottom_area())[0] in ore_list:
+        elif highest[0] == "down" and highest[2]:
             logging.info("Requesting Rotation Down")
             self.dispatcher.request_rotate(lambda: controller.LookDown(rotation_angle))
             self.angle_down += 1
+            self.angle_sum = 0
             return -1
         elif abs(self.angle_sum) < 360:
             logging.info("Did not found ore... Rotating Right")
