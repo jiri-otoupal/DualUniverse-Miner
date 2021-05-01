@@ -31,9 +31,10 @@ class ControlDispatcher:
         self.t4.start()
 
     def stop(self, a=None, b=None):
-        self.stopped = True
-        logging.info("User requested stop... Stopping")
-        self.window.minimize()
+        if a.name == "esc":
+            self.stopped = True
+            logging.info("User requested stop... Stopping")
+            self.window.minimize()
 
     def clear_movement_rotation(self):
         self.movement_queue.queue.clear()
