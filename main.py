@@ -76,3 +76,4 @@ if __name__ == '__main__':
     while dispatcher.t1.is_alive():
         sleep(1)
     my.minimize()
+    logging.info("Stopped")
