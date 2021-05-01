@@ -23,6 +23,7 @@ class ControlDispatcher:
 
     def stop(self, a=None, b=None):
         self.stopped = True
+        logging.info("User requested stop... Stopping")
 
     def clear_movement_rotation(self):
         self.movement_queue.queue.clear()

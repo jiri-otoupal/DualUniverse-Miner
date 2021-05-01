@@ -36,6 +36,7 @@ class Vision:
     def _recognize_in_loop_center(self):
         while not self.dispatcher.stopped:
             ore_type, confidence = self.what_is_in_area()
+            logging.info("Ahead of me is " + ore_type)
             is_ore = ore_type in ore_list
             if is_ore:
                 logging.info("Requesting Mine of " + ore_type)

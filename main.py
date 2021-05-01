@@ -67,7 +67,9 @@ if __name__ == '__main__':
     # TODO: pass function that will be called if is too far away and if see ore
     controller.SwitchToHarvest(0.05)
     controller.SwitchToMining(0.05)
+    logging.info("Maximizing Mining Circle")
     controller.maximize_mining_circle()
+    logging.info("Maximized")
     vision = Vision(my, classifier, dispatcher)
     dispatcher.start()
     vision.start()
