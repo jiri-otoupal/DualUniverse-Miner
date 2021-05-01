@@ -99,12 +99,9 @@ history = model.fit(
 )
 model.save(model_name)
 
-model.fit(
-    train_generator, batch_size=batch_size,
-    epochs=epochs,
-    validation_data=val_ds)
+# model.fit(
+#    train_generator, batch_size=batch_size,
+#    epochs=epochs,
+#    validation_data=val_ds)
 
-model.save(model_name)
-
-scores = model.evaluate(train_ds, val_ds, verbose=0)
-print("Accuracy: %.2f%%" % (scores[1] * 100))
+# model.save(model_name)
