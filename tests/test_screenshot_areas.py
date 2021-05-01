@@ -4,6 +4,7 @@ from time import sleep
 import pyautogui
 import pygetwindow
 
+from classifier_predict import Classifier
 from vision import Vision
 
 
@@ -17,6 +18,11 @@ class MyTestCase(unittest.TestCase):
         pyautogui.screenshot("right.png", region=vision.get_right_area())
         pyautogui.screenshot("top.png", region=vision.get_top_area())
         pyautogui.screenshot("bottom.png", region=vision.get_bottom_area())
+        classifier = Classifier("../models/ores_pk_v3_aug")
+        print(classifier.predict("left.png"))
+        print(classifier.predict("right.png"))
+        print(classifier.predict("top.png"))
+        print(classifier.predict("bottom.png"))
 
 
 if __name__ == '__main__':

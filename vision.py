@@ -115,20 +115,20 @@ class Vision:
         starty = y // 2 - height // 2
         return startx, starty, width, height
 
-    def get_left_area(self, width=600):
+    def get_left_area(self, width=700):
         startx = 0
         starty = 0
         return startx, starty, width, self.window.height
 
-    def get_right_area(self, width=600):
+    def get_right_area(self, width=700):
         startx = self.window.width - width
         starty = 0
         return startx, starty, width, self.window.height
 
     def get_top_area(self, width=500):
-        startx = width
-        starty = 1
-        return startx, starty, self.window.width - 600, self.window.height / 2 - 300
+        startx = 300
+        starty = 0
+        return startx, starty, self.window.width - 700, self.window.height / 2 - width
 
     def get_bottom_area(self, width=300):
         y, x = self.window.height, self.window.width
