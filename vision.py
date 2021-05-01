@@ -67,7 +67,7 @@ class Vision:
         by_confidence = np.flip(zipped[np.argsort(zipped[:, 1])])
         by_confidence[:, 2] = by_confidence[:, 2] == ore_list
         highest = by_confidence[0]
-        logging.info("Highest now: " + highest[0] + " Confidence: " + str(highest[2]))
+        logging.info("Highest now: " + highest[0] + " Confidence: " + str(highest[0]))
 
         if highest[0] == "left" and highest[2]:
             logging.info("Requesting Rotation Left")
@@ -79,13 +79,13 @@ class Vision:
             self.dispatcher.request_rotate(lambda: controller.LookRight(rotation_angle))
             self.angle_sum += 1
             return -2
-        elif highest[0] == "up" and highest[2]:
+        elif highest[0] == "top" and highest[2]:
             logging.info("Requesting Rotation Up")
             self.dispatcher.request_rotate(lambda: controller.LookUp(rotation_angle))
             self.angle_sum = 0
             self.angle_down -= 1
             return 1
-        elif highest[0] == "down" and highest[2]:
+        elif highest[0] == "bottom" and highest[2]:
             logging.info("Requesting Rotation Down")
             self.dispatcher.request_rotate(lambda: controller.LookDown(rotation_angle))
             self.angle_down += 1
