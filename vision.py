@@ -91,19 +91,20 @@ class Vision:
             self.angle_down += 1
             self.angle_sum = 0
             return -1
-        elif abs(self.angle_sum) < 360:
-            logging.info("Did not found ore... Rotating Right")
-            self.dispatcher.request_rotate(lambda: controller.LookRight(45))
-        elif abs(self.angle_down) < 90:
-            self.angle_sum = 0
-            logging.info("Nothing in X axis trying to rotate Down for ore")
-            self.dispatcher.request_rotate(lambda: controller.LookDown(rotation_angle))
-            self.angle_down += 1
         else:
-            logging.info("Nothing in X axis trying to rotate Up for ore")
-            self.dispatcher.request_rotate(lambda: controller.LookUp(180))
-            self.angle_down = 0
-            self.angle_sum = 0
+            if abs(self.angle_sum) < 360:
+                logging.info("Did not found ore... Rotating Right")
+                self.dispatcher.request_rotate(lambda: controller.LookRight(45))
+            elif abs(self.angle_down) < 90:
+                self.angle_sum = 0
+                logging.info("Nothing in X axis trying to rotate Down for ore")
+                self.dispatcher.request_rotate(lambda: controller.LookDown(rotation_angle))
+                self.angle_down += 1
+            else:
+                logging.info("Nothing in X axis trying to rotate Up for ore")
+                self.dispatcher.request_rotate(lambda: controller.LookUp(180))
+                self.angle_down = 0
+                self.angle_sum = 0
 
     def get_center_area(self, width=20, height=20):
         y, x = self.window.height, self.window.width
