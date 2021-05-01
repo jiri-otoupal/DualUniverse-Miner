@@ -24,12 +24,12 @@ class Vision:
         Thread(target=self._recognize_in_loop_center, daemon=True).start()
 
     def _rotate_camera_left(self):
-        angles = 12
+        angles = 2
         self.dispatcher.request_rotate(lambda: controller.LookLeft(angles))
         self.angle_sum -= angles
 
     def _rotate_camera_right(self):
-        angles = 12
+        angles = 2
         self.dispatcher.request_rotate(lambda: controller.LookRight(angles))
         self.angle_sum += angles
 
