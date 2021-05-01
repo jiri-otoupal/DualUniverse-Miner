@@ -4,7 +4,6 @@ import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
 from tensorflow.keras.models import Sequential
-from tensorflow.python.keras.preprocessing.image import ImageDataGenerator
 
 model_name = "models/ores_n_v1_aug"
 epochs = 20
@@ -29,16 +28,16 @@ val_ds = tf.keras.preprocessing.image_dataset_from_directory(
     image_size=(img_height, img_width),
     batch_size=batch_size)
 
-train_datagen = ImageDataGenerator(
-    rescale=1. / 255,
-    brightness_range=[0.8, 1.2])
-
-test_datagen = ImageDataGenerator(rescale=1. / 255)
-train_generator = train_datagen.flow_from_directory(
-    data_dir,
-    target_size=(32, 32), color_mode='rgb', shuffle=True,
-    seed=42, class_mode="sparse",
-    batch_size=32)
+# train_datagen = ImageDataGenerator(
+#    rescale=1. / 255,
+#    brightness_range=[0.8, 1.2])
+#
+# test_datagen = ImageDataGenerator(rescale=1. / 255)
+# train_generator = train_datagen.flow_from_directory(
+#    data_dir,
+#    target_size=(32, 32), color_mode='rgb', shuffle=True,
+#    seed=42, class_mode="sparse",
+#    batch_size=32)
 
 AUTOTUNE = tf.data.AUTOTUNE
 print(train_ds.class_names)
@@ -94,8 +93,8 @@ history = model.fit(
 )
 model.save(model_name)
 
-model.fit(
-    train_generator, batch_size=batch_size,
-    epochs=epochs,
-    validation_data=val_ds)
-model.save(model_name)
+# model.fit(
+#    train_generator, batch_size=batch_size,
+#    epochs=epochs,
+#    validation_data=val_ds)
+#model.save(model_name)
