@@ -70,7 +70,7 @@ class Vision:
         if np.size() > 0:
             highest = by_confidence[0]
 
-        logging.info("Highest now: " + highest[0] + " Ore: " + str(highest[2]))
+            logging.info("Highest now: " + highest[0] + " Ore: " + str(highest[2]))
 
         if highest[0] == "left" and highest[2]:
             logging.info("Requesting Rotation Left")
