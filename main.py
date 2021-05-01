@@ -87,11 +87,7 @@ if __name__ == '__main__':
     keyboard.hook(dispatcher.stop)
     # TODO: pass function that will be called if is too far away and if see ore
     controller.SwitchToMining(0.05)
-    pyautogui.keyDown('ctrl')
-    for s in range(100):
-        pyautogui.scroll(1)
-        pyautogui.sleep(0.1)
-    pyautogui.keyUp('ctrl')
+    controller.maximize_mining_circle()
     vision = Vision(my, classifier, dispatcher)
     dispatcher.start()
     vision.start()

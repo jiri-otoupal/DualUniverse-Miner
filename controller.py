@@ -2,6 +2,7 @@ import ctypes
 import time
 
 import pyautogui
+import pydirectinput as pydirectinput
 
 SendInput = ctypes.windll.user32.SendInput
 
@@ -33,6 +34,15 @@ Up = 0x48
 
 # C struct redefinitions
 PUL = ctypes.POINTER(ctypes.c_ulong)
+
+
+def maximize_mining_circle():
+    pydirectinput.keyDown('ctrl')
+    for s in range(100):
+        pyautogui.scroll(10)
+        time.sleep(0.01)
+        pyautogui.scroll(10)
+    pydirectinput.keyUp('ctrl')
 
 
 class KeyBdInput(ctypes.Structure):
