@@ -67,7 +67,7 @@ class Vision:
         by_confidence = np.flip(zipped[np.argsort(zipped[:, 1])])
         by_confidence[:, 2] = by_confidence[:, 2] == ore_list
         highest = by_confidence[0]
-        logging.info("Highest now: " + highest[0] + " Confidence: " + str(highest[0]))
+        logging.info("Highest now: " + highest[0] + " Confidence: " + str(highest[2]))
 
         if highest[0] == "left" and highest[2]:
             logging.info("Requesting Rotation Left")
@@ -106,7 +106,7 @@ class Vision:
                 self.angle_down = 0
                 self.angle_sum = 0
 
-    def get_center_area(self, width=20, height=20):
+    def get_center_area(self, width=32, height=32):
         y, x = self.window.height, self.window.width
         startx = x // 2 - width // 2
         starty = y // 2 - height // 2
@@ -128,8 +128,10 @@ class Vision:
         return startx, starty, self.window.width - width, self.window.height / 2 - 50
 
     def get_bottom_area(self, width=300):
-        startx = 300
-        return startx, self.window.height - width * 2, self.window.width - width, 500
+        y, x = self.window.height, self.window.width
+        startx = x // 2 - 500 // 2
+        starty = y // 1.21 - 50 // 2
+        return startx, starty, 500, 50
 
     def get_warning_area(self):
         y, x = self.window.height, self.window.width
