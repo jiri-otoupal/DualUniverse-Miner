@@ -43,7 +43,6 @@ class Vision:
                 self.dispatcher.request_tool_event(controller.Mine)
                 logging.debug("Clearing Movement and Rotation")
                 self.dispatcher.clear_movement_rotation()
-                return
             if self.too_far_away() and self.too_f_away_counter > 3:
                 self.too_f_away_counter = 0
                 if not self.rotate_to_closest_ore():
@@ -58,7 +57,7 @@ class Vision:
 
     def rotate_to_closest_ore(self):
         if self.what_is_in_area(self.get_left_area())[0] in ore_list:
-            logging.info("Requesting Rotation Up")
+            logging.info("Requesting Rotation Left")
             self.dispatcher.request_rotate(lambda: controller.LookLeft(12))
             return 2
         if self.what_is_in_area(self.get_right_area())[0] in ore_list:
@@ -75,7 +74,7 @@ class Vision:
             return -1
         return False
 
-    def get_center_area(self, width=32, height=32):
+    def get_center_area(self, width=25, height=25):
         y, x = self.window.height, self.window.width
         startx = x // 2 - width // 2
         starty = y // 2 - height // 2
@@ -87,7 +86,7 @@ class Vision:
         return startx, starty, width, self.window.height
 
     def get_right_area(self, width=300):
-        startx = self.window.width - 100
+        startx = self.window.width - width
         starty = 0
         return startx, starty, width, self.window.height
 
@@ -98,7 +97,7 @@ class Vision:
 
     def get_bottom_area(self, width=300):
         startx = 300
-        return startx, self.window.height - width * 1.5, self.window.width - width, width
+        return startx, self.window.height - width * 1.4, self.window.width - width, width
 
     def get_warning_area(self):
         y, x = self.window.height, self.window.width
