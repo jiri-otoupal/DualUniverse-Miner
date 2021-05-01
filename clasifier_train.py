@@ -7,7 +7,7 @@ from tensorflow.keras.models import Sequential
 from tensorflow.python.keras.preprocessing.image import ImageDataGenerator
 
 model_name = "models/ores_pk_v2_aug"
-epochs = 100
+epochs = 50
 batch_size = 32
 img_height = 32
 img_width = 32
@@ -76,13 +76,11 @@ model = Sequential([
     layers.MaxPooling2D(),
     layers.Conv2D(64, 3, padding='same', activation='relu'),
     layers.MaxPooling2D(),
-    layers.Conv2D(128, 3, padding='same', activation='elu'),
+    layers.Conv2D(128, 3, padding='same', activation='relu'),
     layers.MaxPooling2D(),
-    layers.Conv2D(256, 3, padding='same', activation='gelu'),
-    layers.MaxPooling2D(),
-    layers.Dropout(0.1),
+    layers.Dropout(0.2),
     layers.Flatten(),
-    layers.Dense(256, activation='gelu'),
+    layers.Dense(256, activation='relu'),
     layers.Dense(num_classes)
 ])
 
