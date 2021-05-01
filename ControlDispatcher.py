@@ -6,7 +6,7 @@ from time import sleep
 
 class ControlDispatcher:
 
-    def __init__(self):
+    def __init__(self, window):
         self.stopped = True
         self.camera_queue = Queue()
         self.movement_queue = Queue()
@@ -16,6 +16,7 @@ class ControlDispatcher:
         self.t2: Thread = None
         self.t3: Thread = None
         self.t4: Thread = None
+        self.window = window
 
     def start(self):
         self.stopped = False
@@ -32,6 +33,7 @@ class ControlDispatcher:
     def stop(self, a=None, b=None):
         self.stopped = True
         logging.info("User requested stop... Stopping")
+        self.window.minimize()
 
     def clear_movement_rotation(self):
         self.movement_queue.queue.clear()
