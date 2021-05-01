@@ -19,6 +19,7 @@ class Vision:
         self.dispatcher = dispatcher
         self.too_f_away_counter = 0
         self.angle_sum = 0
+        self.angle_down = 0
 
     def start(self):
         Thread(target=self._recognize_in_loop_center, daemon=True).start()
@@ -33,11 +34,11 @@ class Vision:
 
     def _recognize_in_loop_center(self):
         while not self.dispatcher.stopped:
-            ore_type, confidence = self.what_is_in_area()
             warning_tfa = self.too_far_away()
+            ore_type, confidence = self.what_is_in_area()
             logging.info("Ahead of me is " + ore_type)
             is_ore = ore_type in ore_list
-            if is_ore:
+            if is_ore and not warning_tfa:
                 logging.info("Requesting Mine of " + ore_type)
                 self.dispatcher.request_tool_event(controller.Mine)
                 logging.debug("Clearing Movement and Rotation")
@@ -73,8 +74,19 @@ class Vision:
             logging.info("Requesting Rotation Down")
             self.dispatcher.request_rotate(lambda: controller.LookDown(rotation_angle))
             return -1
-        logging.info("Did not found ore... Rotating Right")
-        self.dispatcher.request_rotate(lambda: controller.LookRight(rotation_angle))
+        if self.angle_sum < 360:
+            logging.info("Did not found ore... Rotating Right")
+            self.dispatcher.request_rotate(lambda: controller.LookRight(rotation_angle))
+        elif self.angle_down < 90:
+            self.angle_sum = 0
+            logging.info("Nothing in X axis trying to rotate Down for ore")
+            self.dispatcher.request_rotate(lambda: controller.LookDown(rotation_angle))
+            self.angle_down += 1
+        else:
+            logging.info("Nothing in X axis trying to rotate Up for ore")
+            self.dispatcher.request_rotate(lambda: controller.LookUp(180))
+            self.angle_down = 0
+            self.angle_sum = 0
         return False
 
     def get_center_area(self, width=25, height=25):
@@ -131,3 +143,4 @@ class Vision:
         if a == "warning" and x > 0.5:
             self.too_f_away_counter += 1
             return True
+        return False
