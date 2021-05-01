@@ -21,15 +21,15 @@ class Vision:
         self.angle_sum = 0
 
     def start(self):
-        Thread(target=self._recognize_in_loop_center).start()
+        Thread(target=self._recognize_in_loop_center, daemon=True).start()
 
     def _rotate_camera_left(self):
-        angles = 10
+        angles = 12
         self.dispatcher.request_rotate(lambda: controller.LookLeft(angles))
         self.angle_sum -= angles
 
     def _rotate_camera_right(self):
-        angles = 10
+        angles = 12
         self.dispatcher.request_rotate(lambda: controller.LookRight(angles))
         self.angle_sum += angles
 
@@ -58,19 +58,19 @@ class Vision:
     def rotate_to_closest_ore(self):
         if self.what_is_in_area(self.get_left_area())[0] in ore_list:
             logging.info("Requesting Rotation Up")
-            self.dispatcher.request_rotate(lambda: controller.LookLeft(10))
+            self.dispatcher.request_rotate(lambda: controller.LookLeft(12))
             return 2
         if self.what_is_in_area(self.get_right_area())[0] in ore_list:
             logging.info("Requesting Rotation Right")
-            self.dispatcher.request_rotate(lambda: controller.LookRight(10))
+            self.dispatcher.request_rotate(lambda: controller.LookRight(12))
             return -2
         if self.what_is_in_area(self.get_top_area())[0] in ore_list:
             logging.info("Requesting Rotation Up")
-            self.dispatcher.request_rotate(lambda: controller.LookUp(10))
+            self.dispatcher.request_rotate(lambda: controller.LookUp(12))
             return 1
         if self.what_is_in_area(self.get_bottom_area())[0] in ore_list:
             logging.info("Requesting Rotation Down")
-            self.dispatcher.request_rotate(lambda: controller.LookDown(10))
+            self.dispatcher.request_rotate(lambda: controller.LookDown(12))
             return -1
         return False
 
@@ -95,9 +95,9 @@ class Vision:
         starty = 0
         return startx, starty, self.window.width - width, width
 
-    def get_bottom_area(self, width=200):
-        startx = 100
-        return startx, self.window.height - width * 2, self.window.width - width, width
+    def get_bottom_area(self, width=300):
+        startx = 300
+        return startx, self.window.height - width * 3, self.window.width - width, width
 
     def get_warning_area(self):
         y, x = self.window.height, self.window.width

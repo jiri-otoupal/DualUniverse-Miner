@@ -16,10 +16,10 @@ class ControlDispatcher:
     def start(self):
         self.stopped = False
         logging.info("Started Control Dispatcher")
-        Thread(target=self.__update_rotate).start()
-        Thread(target=self.__update_position).start()
-        Thread(target=self.__update_jump).start()
-        Thread(target=self.__update_tool).start()
+        Thread(target=self.__update_rotate, daemon=True).start()
+        Thread(target=self.__update_position, daemon=True).start()
+        Thread(target=self.__update_jump, daemon=True).start()
+        Thread(target=self.__update_tool, daemon=True).start()
 
     def stop(self, a=None, b=None):
         self.stopped = True
@@ -37,7 +37,8 @@ class ControlDispatcher:
         request_movement(lambda:Forward(1))
         :param function_ptr: Movement Function ! Without () !
         """
-        self.movement_queue.put(function_ptr)
+        if self.tool_control_queue.empty():
+            self.movement_queue.put(function_ptr)
 
     def request_jump(self, function_ptr):
         """
@@ -46,7 +47,8 @@ class ControlDispatcher:
         request_movement(lambda:Forward(1))
         :param function_ptr: Movement Function ! Without () !
         """
-        self.jump_queue.put(function_ptr)
+        if self.tool_control_queue.empty():
+            self.jump_queue.put(function_ptr)
 
     def request_rotate(self, function_ptr):
         """
@@ -55,7 +57,8 @@ class ControlDispatcher:
         request_rotate(lambda:LookLeft(45))
         :param function_ptr: Rotate Function
         """
-        self.camera_queue.put(function_ptr)
+        if self.tool_control_queue.empty():
+            self.camera_queue.put(function_ptr)
 
     def request_tool_event(self, function_ptr):
         """
@@ -64,7 +67,8 @@ class ControlDispatcher:
         request_rotate(lambda:LookLeft(45))
         :param function_ptr: Rotate Function
         """
-        self.tool_control_queue.put(function_ptr)
+        if self.tool_control_queue.empty():
+            self.tool_control_queue.put(function_ptr)
 
     def __update_position(self):
         while not self.stopped:

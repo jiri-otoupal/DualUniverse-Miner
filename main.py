@@ -11,7 +11,6 @@ c 2021
 import logging
 from time import sleep
 
-import keyboard as keyboard
 import pyautogui
 import pygetwindow
 from rich.console import Console
@@ -63,7 +62,7 @@ if __name__ == '__main__':
     my = pygetwindow.getWindowsWithTitle(dual_windows[0])[0]
     my.maximize()
     dispatcher = ControlDispatcher()
-    keyboard.hook(dispatcher.stop)
+    # keyboard.hook(dispatcher.stop)
     # TODO: pass function that will be called if is too far away and if see ore
     controller.SwitchToHarvest(0.05)
     controller.SwitchToMining(0.05)
