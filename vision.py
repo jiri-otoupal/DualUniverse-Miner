@@ -111,7 +111,7 @@ class Vision:
     def get_top_area(self, width=300):
         startx = 100
         starty = 5
-        return startx, starty, self.window.width - width, width
+        return startx, starty, self.window.width - width, self.window.height / 2 - 50
 
     def get_bottom_area(self, width=300):
         startx = 300
