@@ -6,8 +6,8 @@ from tensorflow.keras import layers
 from tensorflow.keras.models import Sequential
 from tensorflow.python.keras.preprocessing.image import ImageDataGenerator
 
-model_name = "models/ores_pk_v2_aug"
-epochs = 50
+model_name = "models/ores_n_v1_aug"
+epochs = 20
 batch_size = 32
 img_height = 32
 img_width = 32
@@ -33,17 +33,17 @@ train_datagen = ImageDataGenerator(
     rescale=1. / 255,
     brightness_range=[0.8, 1.2])
 
-test_datagen = ImageDataGenerator(rescale=1. / 255)
-train_generator = train_datagen.flow_from_directory(
-    data_dir,
-    target_size=(32, 32), color_mode='rgb', shuffle=True,
-    seed=42, class_mode="sparse",
-    batch_size=32)
-validation_generator = test_datagen.flow_from_directory(
-    data_dir,
-    target_size=(32, 32), color_mode='rgb', shuffle=True,
-    seed=12, class_mode="sparse",
-    batch_size=32)
+# test_datagen = ImageDataGenerator(rescale=1. / 255)
+# train_generator = train_datagen.flow_from_directory(
+#    data_dir,
+#    target_size=(32, 32), color_mode='rgb', shuffle=True,
+#    seed=42, class_mode="sparse",
+#    batch_size=32)
+# validation_generator = test_datagen.flow_from_directory(
+#    data_dir,
+#    target_size=(32, 32), color_mode='rgb', shuffle=True,
+#    seed=12, class_mode="sparse",
+#    batch_size=32)
 
 AUTOTUNE = tf.data.AUTOTUNE
 print(train_ds.class_names)
@@ -63,7 +63,7 @@ data_augmentation = keras.Sequential(
                                                      input_shape=(img_height,
                                                                   img_width,
                                                                   3)),
-        layers.experimental.preprocessing.RandomRotation(15),
+        layers.experimental.preprocessing.RandomRotation(0.5),
         layers.experimental.preprocessing.RandomZoom(0.3)
     ]
 )
@@ -81,6 +81,9 @@ model = Sequential([
     layers.Dropout(0.2),
     layers.Flatten(),
     layers.Dense(256, activation='relu'),
+    layers.Dropout(0.2),
+    layers.Dense(64, activation='relu'),
+    layers.Dropout(0.2),
     layers.Dense(num_classes)
 ])
 
