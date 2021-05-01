@@ -64,10 +64,10 @@ if __name__ == '__main__':
     for window in dual_windows:
         logging.info("Dual Universe instances: [" + window + "]")
     my = pygetwindow.getWindowsWithTitle(dual_windows[0])[0]
+    my.maximize()
     dispatcher = ControlDispatcher(my)
     keyboard.hook(dispatcher.stop)
     # TODO: pass function that will be called if is too far away and if see ore
-    my.maximize()
     vision = Vision(my, classifier, dispatcher)
     dispatcher.start()
     vision.start()
