@@ -12,14 +12,18 @@ class ControlDispatcher:
         self.movement_queue = Queue()
         self.jump_queue = Queue()
         self.tool_control_queue = Queue()
+        self.t1: Thread = None
+        self.t2: Thread = None
+        self.t3: Thread = None
+        self.t4: Thread = None
 
     def start(self):
         self.stopped = False
         logging.info("Started Control Dispatcher")
-        Thread(target=self.__update_rotate, daemon=True).start()
-        Thread(target=self.__update_position, daemon=True).start()
-        Thread(target=self.__update_jump, daemon=True).start()
-        Thread(target=self.__update_tool, daemon=True).start()
+        self.t1 = Thread(target=self.__update_rotate, daemon=True).start()
+        self.t2 = Thread(target=self.__update_position, daemon=True).start()
+        self.t3 = Thread(target=self.__update_jump, daemon=True).start()
+        self.t4 = Thread(target=self.__update_tool, daemon=True).start()
 
     def stop(self, a=None, b=None):
         self.stopped = True
@@ -74,26 +78,26 @@ class ControlDispatcher:
         while not self.stopped:
             if not self.movement_queue.empty():
                 self.movement_queue.get()()
-                logging.debug("AI Requested Movement")
+                logging.info("AI Requested Movement")
             sleep(0.05)
 
     def __update_jump(self):
         while not self.stopped:
             if not self.jump_queue.empty():
                 self.jump_queue.get()()
-                logging.debug("AI Requested Jump")
+                logging.info("AI Requested Jump")
             sleep(0.05)
 
     def __update_rotate(self):
         while not self.stopped:
             if not self.camera_queue.empty():
                 self.camera_queue.get()()
-                logging.debug("AI Requested Rotating")
+                logging.info("AI Requested Rotating")
             sleep(0.05)
 
     def __update_tool(self):
         while not self.stopped:
             if not self.tool_control_queue.empty():
                 self.tool_control_queue.get()()
-                logging.debug("AI Requested Tool Event")
+                logging.info("AI Requested Tool Event")
             sleep(0.05)

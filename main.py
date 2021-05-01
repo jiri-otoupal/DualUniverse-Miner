@@ -9,6 +9,7 @@ c 2021
 
 """
 import logging
+from time import sleep
 
 import pyautogui
 import pygetwindow
@@ -71,3 +72,5 @@ if __name__ == '__main__':
     vision = Vision(my, classifier, dispatcher)
     dispatcher.start()
     vision.start()
+    while dispatcher.t1.is_alive():
+        sleep(1)

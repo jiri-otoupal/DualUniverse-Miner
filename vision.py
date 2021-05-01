@@ -75,7 +75,7 @@ class Vision:
             return -1
         return False
 
-    def get_center_area(self, width=45, height=45):
+    def get_center_area(self, width=32, height=32):
         y, x = self.window.height, self.window.width
         startx = x // 2 - width // 2
         starty = y // 2 - height // 2
@@ -98,7 +98,7 @@ class Vision:
 
     def get_bottom_area(self, width=300):
         startx = 300
-        return startx, self.window.height - width * 3, self.window.width - width, width
+        return startx, self.window.height - width * 1.5, self.window.width - width, width
 
     def get_warning_area(self):
         y, x = self.window.height, self.window.width
