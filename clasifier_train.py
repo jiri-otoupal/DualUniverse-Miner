@@ -64,8 +64,7 @@ data_augmentation = keras.Sequential(
                                                                   img_width,
                                                                   3)),
         layers.experimental.preprocessing.RandomRotation(15),
-        layers.experimental.preprocessing.RandomZoom(0.3),
-        layers.experimental.preprocessing.RandomContrast(0.2),
+        layers.experimental.preprocessing.RandomZoom(0.3)
     ]
 )
 model = Sequential([

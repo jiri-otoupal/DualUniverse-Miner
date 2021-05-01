@@ -48,6 +48,7 @@ class Vision:
                     self.dispatcher.request_rotate(lambda: controller.LookRight(90))
                     logging.debug("Requesting Rotation Right Because none ore was found")
             elif warning_tfa and self.too_f_away_counter > 0:
+                logging.info("Requesting Jump")
                 self.dispatcher.request_jump(controller.Jump)
                 self.dispatcher.request_movement(lambda: controller.Forward(forward_time))
             else:
@@ -124,4 +125,6 @@ class Vision:
         pyautogui.screenshot(image_path, region=self.get_warning_area())
         a, x = self.classifier.predict(image_path)
         os.remove(image_path)
-        return a == "warning" and x > 0.5
+        if a == "warning" and x > 0.5:
+            self.too_f_away_counter += 1
+            return True
