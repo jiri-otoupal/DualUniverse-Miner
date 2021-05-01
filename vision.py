@@ -61,23 +61,27 @@ class Vision:
         if self.what_is_in_area(self.get_left_area())[0] in ore_list:
             logging.info("Requesting Rotation Left")
             self.dispatcher.request_rotate(lambda: controller.LookLeft(rotation_angle))
+            self.angle_sum -= 1
             return 2
         elif self.what_is_in_area(self.get_right_area())[0] in ore_list:
             logging.info("Requesting Rotation Right")
             self.dispatcher.request_rotate(lambda: controller.LookRight(rotation_angle))
+            self.angle_sum += 1
             return -2
         elif self.what_is_in_area(self.get_top_area())[0] in ore_list:
             logging.info("Requesting Rotation Up")
             self.dispatcher.request_rotate(lambda: controller.LookUp(rotation_angle))
+            self.angle_down -= 1
             return 1
         elif self.what_is_in_area(self.get_bottom_area())[0] in ore_list:
             logging.info("Requesting Rotation Down")
             self.dispatcher.request_rotate(lambda: controller.LookDown(rotation_angle))
+            self.angle_down += 1
             return -1
-        elif self.angle_sum < 360:
+        elif abs(self.angle_sum) < 360:
             logging.info("Did not found ore... Rotating Right")
             self.dispatcher.request_rotate(lambda: controller.LookRight(rotation_angle))
-        elif self.angle_down < 90:
+        elif abs(self.angle_down) < 90:
             self.angle_sum = 0
             logging.info("Nothing in X axis trying to rotate Down for ore")
             self.dispatcher.request_rotate(lambda: controller.LookDown(rotation_angle))
@@ -87,7 +91,6 @@ class Vision:
             self.dispatcher.request_rotate(lambda: controller.LookUp(180))
             self.angle_down = 0
             self.angle_sum = 0
-        return False
 
     def get_center_area(self, width=20, height=20):
         y, x = self.window.height, self.window.width
