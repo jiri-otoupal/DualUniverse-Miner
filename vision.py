@@ -5,7 +5,7 @@ from threading import Thread
 import pyautogui
 
 import controller
-from config import ore_list
+from config import ore_list, rotation_angle, forward_time
 
 
 class Vision:
@@ -24,14 +24,12 @@ class Vision:
         Thread(target=self._recognize_in_loop_center, daemon=True).start()
 
     def _rotate_camera_left(self):
-        angles = 1
-        self.dispatcher.request_rotate(lambda: controller.LookLeft(angles))
-        self.angle_sum -= angles
+        self.dispatcher.request_rotate(lambda: controller.LookLeft(rotation_angle))
+        self.angle_sum -= rotation_angle
 
     def _rotate_camera_right(self):
-        angles = 1
-        self.dispatcher.request_rotate(lambda: controller.LookRight(angles))
-        self.angle_sum += angles
+        self.dispatcher.request_rotate(lambda: controller.LookRight(rotation_angle))
+        self.angle_sum += rotation_angle
 
     def _recognize_in_loop_center(self):
         while not self.dispatcher.stopped:
@@ -50,7 +48,7 @@ class Vision:
                     logging.debug("Requesting Rotation Right Because none ore was found")
             elif self.too_far_away() and self.too_f_away_counter > 0:
                 self.dispatcher.request_jump(controller.Jump)
-                self.dispatcher.request_movement(lambda: controller.Forward(1))
+                self.dispatcher.request_movement(lambda: controller.Forward(forward_time))
             else:
                 self.too_f_away_counter = 0
                 self.rotate_to_closest_ore()
@@ -58,19 +56,19 @@ class Vision:
     def rotate_to_closest_ore(self):
         if self.what_is_in_area(self.get_left_area())[0] in ore_list:
             logging.info("Requesting Rotation Left")
-            self.dispatcher.request_rotate(lambda: controller.LookLeft(12))
+            self.dispatcher.request_rotate(lambda: controller.LookLeft(rotation_angle))
             return 2
         if self.what_is_in_area(self.get_right_area())[0] in ore_list:
             logging.info("Requesting Rotation Right")
-            self.dispatcher.request_rotate(lambda: controller.LookRight(12))
+            self.dispatcher.request_rotate(lambda: controller.LookRight(rotation_angle))
             return -2
         if self.what_is_in_area(self.get_top_area())[0] in ore_list:
             logging.info("Requesting Rotation Up")
-            self.dispatcher.request_rotate(lambda: controller.LookUp(12))
+            self.dispatcher.request_rotate(lambda: controller.LookUp(rotation_angle))
             return 1
         if self.what_is_in_area(self.get_bottom_area())[0] in ore_list:
             logging.info("Requesting Rotation Down")
-            self.dispatcher.request_rotate(lambda: controller.LookDown(12))
+            self.dispatcher.request_rotate(lambda: controller.LookDown(rotation_angle))
             return -1
         return False
 
