@@ -11,6 +11,7 @@ c 2021
 import logging
 from time import sleep
 
+import keyboard as keyboard
 import pyautogui
 import pygetwindow
 from rich.console import Console
@@ -64,7 +65,7 @@ if __name__ == '__main__':
         logging.info("Dual Universe instances: [" + window + "]")
     my = pygetwindow.getWindowsWithTitle(dual_windows[0])[0]
     dispatcher = ControlDispatcher()
-    # keyboard.hook(dispatcher.stop)
+    keyboard.hook(dispatcher.stop)
     # TODO: pass function that will be called if is too far away and if see ore
     vision = Vision(my, classifier, dispatcher)
     dispatcher.start()
