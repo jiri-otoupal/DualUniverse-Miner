@@ -89,7 +89,7 @@ class Vision:
             self.angle_sum = 0
         return False
 
-    def get_center_area(self, width=25, height=25):
+    def get_center_area(self, width=20, height=20):
         y, x = self.window.height, self.window.width
         startx = x // 2 - width // 2
         starty = y // 2 - height // 2
