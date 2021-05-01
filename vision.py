@@ -34,6 +34,7 @@ class Vision:
     def _recognize_in_loop_center(self):
         while not self.dispatcher.stopped:
             ore_type, confidence = self.what_is_in_area()
+            warning_tfa = self.too_far_away()
             logging.info("Ahead of me is " + ore_type)
             is_ore = ore_type in ore_list
             if is_ore:
@@ -41,12 +42,12 @@ class Vision:
                 self.dispatcher.request_tool_event(controller.Mine)
                 logging.debug("Clearing Movement and Rotation")
                 self.dispatcher.clear_movement_rotation()
-            if self.too_far_away() and self.too_f_away_counter > 3:
+            if warning_tfa and self.too_f_away_counter > 3:
                 self.too_f_away_counter = 0
                 if not self.rotate_to_closest_ore():
                     self.dispatcher.request_rotate(lambda: controller.LookRight(90))
                     logging.debug("Requesting Rotation Right Because none ore was found")
-            elif self.too_far_away() and self.too_f_away_counter > 0:
+            elif warning_tfa and self.too_f_away_counter > 0:
                 self.dispatcher.request_jump(controller.Jump)
                 self.dispatcher.request_movement(lambda: controller.Forward(forward_time))
             else:
