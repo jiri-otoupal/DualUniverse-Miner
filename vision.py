@@ -59,10 +59,10 @@ class Vision:
                 self.rotate_to_closest_ore()
 
     def rotate_to_closest_ore(self):
-        left = np.array([self.what_is_in_area(self.get_left_area())] + ["left"], dtype=object)
-        right = np.array([self.what_is_in_area(self.get_right_area())] + ["right"], dtype=object)
-        top = np.array([self.what_is_in_area(self.get_top_area())] + ["top"], dtype=object)
-        bottom = np.array([self.what_is_in_area(self.get_bottom_area())] + ["bottom"], dtype=object)
+        left = np.array(self.what_is_in_area(self.get_left_area()) + ("left",), dtype=object)
+        right = np.array(self.what_is_in_area(self.get_right_area()) + ("right",), dtype=object)
+        top = np.array(self.what_is_in_area(self.get_top_area()) + ("top",), dtype=object)
+        bottom = np.array(self.what_is_in_area(self.get_bottom_area()) + ("bottom",), dtype=object)
         zipped = np.vstack([left, right, top, bottom])
         by_confidence = np.flip(zipped[np.argsort(zipped[:, 1])])
         by_confidence[:, 2] = by_confidence[:, 2] == ore_list
