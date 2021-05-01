@@ -72,28 +72,28 @@ class Vision:
 
             logging.info("Highest now: " + highest[0] + " Ore: " + str(highest[2]))
 
-        if highest[0] == "left" and highest[2]:
-            logging.info("Requesting Rotation Left")
-            self.dispatcher.request_rotate(lambda: controller.LookLeft(rotation_angle))
-            self.angle_sum -= 1
-            return 2
-        elif highest[0] == "right" and highest[2]:
-            logging.info("Requesting Rotation Right")
-            self.dispatcher.request_rotate(lambda: controller.LookRight(rotation_angle))
-            self.angle_sum += 1
-            return -2
-        elif highest[0] == "top" and highest[2]:
-            logging.info("Requesting Rotation Up")
-            self.dispatcher.request_rotate(lambda: controller.LookUp(rotation_angle))
-            self.angle_sum = 0
-            self.angle_down -= 1
-            return 1
-        elif highest[0] == "bottom" and highest[2]:
-            logging.info("Requesting Rotation Down")
-            self.dispatcher.request_rotate(lambda: controller.LookDown(rotation_angle))
-            self.angle_down += 1
-            self.angle_sum = 0
-            return -1
+            if highest[0] == "left" and highest[2]:
+                logging.info("Requesting Rotation Left")
+                self.dispatcher.request_rotate(lambda: controller.LookLeft(rotation_angle))
+                self.angle_sum -= 1
+                return 2
+            elif highest[0] == "right" and highest[2]:
+                logging.info("Requesting Rotation Right")
+                self.dispatcher.request_rotate(lambda: controller.LookRight(rotation_angle))
+                self.angle_sum += 1
+                return -2
+            elif highest[0] == "top" and highest[2]:
+                logging.info("Requesting Rotation Up")
+                self.dispatcher.request_rotate(lambda: controller.LookUp(rotation_angle))
+                self.angle_sum = 0
+                self.angle_down -= 1
+                return 1
+            elif highest[0] == "bottom" and highest[2]:
+                logging.info("Requesting Rotation Down")
+                self.dispatcher.request_rotate(lambda: controller.LookDown(rotation_angle))
+                self.angle_down += 1
+                self.angle_sum = 0
+                return -1
         else:
             if abs(self.angle_sum) < 360:
                 logging.info("Did not found ore... Rotating Right")
