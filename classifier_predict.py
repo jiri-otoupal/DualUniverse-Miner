@@ -12,6 +12,10 @@ from tensorflow.python.keras.models import load_model
 class Classifier:
 
     def __init__(self, model):
+        """
+
+        :param model:
+        """
         self.time = 0
         self.model = load_model(model)
         self.class_names = ['bauxite', 'coal', 'hematite', 'quartz', 'terrain', 'warning']
