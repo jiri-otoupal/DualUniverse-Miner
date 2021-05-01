@@ -12,7 +12,7 @@ class MyTestCase(unittest.TestCase):
         # TODO: pass function that will be called if is too far away and if see ore
         sleep(3)
         my = pygetwindow.getWindowsWithTitle("DualBot")[0]
-        vision = Vision(my, None, None)
+        vision = Vision(None, None, None)
         pyautogui.screenshot("left.png", region=vision.get_left_area())
         pyautogui.screenshot("right.png", region=vision.get_right_area())
         pyautogui.screenshot("top.png", region=vision.get_top_area())

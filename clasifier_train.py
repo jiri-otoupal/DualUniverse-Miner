@@ -33,17 +33,12 @@ train_datagen = ImageDataGenerator(
     rescale=1. / 255,
     brightness_range=[0.8, 1.2])
 
-# test_datagen = ImageDataGenerator(rescale=1. / 255)
-# train_generator = train_datagen.flow_from_directory(
-#    data_dir,
-#    target_size=(32, 32), color_mode='rgb', shuffle=True,
-#    seed=42, class_mode="sparse",
-#    batch_size=32)
-# validation_generator = test_datagen.flow_from_directory(
-#    data_dir,
-#    target_size=(32, 32), color_mode='rgb', shuffle=True,
-#    seed=12, class_mode="sparse",
-#    batch_size=32)
+test_datagen = ImageDataGenerator(rescale=1. / 255)
+train_generator = train_datagen.flow_from_directory(
+    data_dir,
+    target_size=(32, 32), color_mode='rgb', shuffle=True,
+    seed=42, class_mode="sparse",
+    batch_size=32)
 
 AUTOTUNE = tf.data.AUTOTUNE
 print(train_ds.class_names)
@@ -63,8 +58,8 @@ data_augmentation = keras.Sequential(
                                                      input_shape=(img_height,
                                                                   img_width,
                                                                   3)),
-        layers.experimental.preprocessing.RandomRotation(0.5),
-        layers.experimental.preprocessing.RandomZoom(0.3)
+        layers.experimental.preprocessing.RandomRotation(0.8),
+        layers.experimental.preprocessing.RandomZoom(0.5)
     ]
 )
 model = Sequential([
@@ -99,9 +94,8 @@ history = model.fit(
 )
 model.save(model_name)
 
-# model.fit(
-#    train_generator, batch_size=batch_size,
-#    epochs=epochs,
-#    validation_data=val_ds)
-
-# model.save(model_name)
+model.fit(
+    train_generator, batch_size=batch_size,
+    epochs=epochs,
+    validation_data=val_ds)
+model.save(model_name)
