@@ -67,7 +67,8 @@ class Vision:
         by_confidence = np.flip(zipped[np.argsort(zipped[:, 1])])
         by_confidence[:, 2] = by_confidence[:, 2] == ore_list
         by_confidence = np.delete(by_confidence, np.where(by_confidence[:, 2] == False)[0], 0)
-        highest = by_confidence[0]
+        if np.size() > 0:
+            highest = by_confidence[0]
 
         logging.info("Highest now: " + highest[0] + " Ore: " + str(highest[2]))
 
