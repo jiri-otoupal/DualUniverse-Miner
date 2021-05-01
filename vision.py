@@ -92,7 +92,7 @@ class Vision:
             return -1
         elif abs(self.angle_sum) < 360:
             logging.info("Did not found ore... Rotating Right")
-            self.dispatcher.request_rotate(lambda: controller.LookRight(rotation_angle))
+            self.dispatcher.request_rotate(lambda: controller.LookRight(45))
         elif abs(self.angle_down) < 90:
             self.angle_sum = 0
             logging.info("Nothing in X axis trying to rotate Down for ore")
