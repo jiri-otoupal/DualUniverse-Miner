@@ -13,6 +13,7 @@ class MyTestCase(unittest.TestCase):
         # TODO: pass function that will be called if is too far away and if see ore
         sleep(3)
         my = pygetwindow.getWindowsWithTitle("Dual Universe")[0]
+        my.maximize()
         vision = Vision(my, None, None)
         pyautogui.screenshot("left.png", region=vision.get_left_area())
         pyautogui.screenshot("right.png", region=vision.get_right_area())
@@ -25,6 +26,7 @@ class MyTestCase(unittest.TestCase):
         print(classifier.predict("top.png"))
         print(classifier.predict("bottom.png"))
         print(classifier.predict("center.png"))
+        my.minimize()
 
 
 if __name__ == '__main__':
