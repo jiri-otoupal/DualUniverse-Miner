@@ -30,7 +30,7 @@ full_auto = False  # Will increase mining radius ( SLOW )
 model_to_use = "models/ores_a_v3_soft"  # Model to use for recognition
 ore_list = ['bauxite', 'coal', 'hematite', 'quartz']  # whitelist of ores
 log_level = logging.INFO  # Log leve ( Debug will show not only bot logs )
-rotation_angle = 2  # degrees ( Smallest degree in sensitivity range is 2 )
+rotation_angle = 5  # degrees ( Smallest degree in sensitivity range is 2 )
 forward_time = 1  # seconds
 
 # Performance impact settings

@@ -32,7 +32,7 @@ class Classifier:
         img = load_img(os.path.normpath(path_to_img), target_size=(32, 32))
         img_array = img_to_array(img)
         img_array = expand_dims(img_array, 0)  # Create a batch
-        predictions = self.model.predict(img_array, batch_size=1)
+        predictions = self.model.predict(img_array, batch_size=8)
         score = tf.nn.softmax(predictions[0])
         logging.debug("Prediction took %.4f sec" % (time() - t0))
         self.time = (time() - t0)
