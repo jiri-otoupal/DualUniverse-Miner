@@ -5,7 +5,6 @@ from time import time
 import numpy as np
 
 from config import prediction_batch_size, cloud
-from predict_cloud import get_prediction
 
 
 class Classifier:
@@ -30,6 +29,7 @@ class Classifier:
         """
         t0 = time()
         if cloud:
+            from predict_cloud import get_prediction
             prediction = get_prediction(path_to_img)
             logging.debug("Prediction took %.4f sec" % (time() - t0))
             self.time = (time() - t0)
