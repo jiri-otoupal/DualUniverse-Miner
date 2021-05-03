@@ -11,7 +11,7 @@
 Dual Universe Bot
 
 
-Copyright Jiri Otoupal, Dominik Deak, Vojta
+Copyright Jiri Otoupal, Dominik Deak, Vojtech Sevcik
 
 c 2021
 

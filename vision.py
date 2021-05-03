@@ -30,11 +30,25 @@ class Vision:
         self.too_f_away_counter = 0
         self.angle_sum = 0
         self.angle_down = 0
+        self.mined = 0
+        self.sum_mined = 0
 
     def start(self):
         thread = Thread(target=self._recognize_in_loop_center)
         thread.start()
         return thread
+
+    def fail_safe(self):
+        if self.angle_down > 0:
+            self.dispatcher.request_rotate(lambda: controller.LookUp(self.dispatcher, 30))
+        else:
+            self.dispatcher.request_rotate(lambda: controller.LookDown(self.dispatcher, 30))
+        if self.angle_sum > 0:
+            self.dispatcher.request_rotate(lambda: controller.LookLeft(self.dispatcher, 30))
+        else:
+            self.dispatcher.request_rotate(lambda: controller.LookRight(self.dispatcher, 30))
+        self.dispatcher.request_jump(lambda: controller.Jump(self.dispatcher))
+        self.dispatcher.request_movement(lambda: controller.Forward(forward_time))
 
     def _recognize_in_loop_center(self):
         while not self.dispatcher.stopped:
@@ -44,6 +58,10 @@ class Vision:
                        not self.dispatcher.mr_undergoing) and not self.dispatcher.stopped:
                 logging.info("Waiting for Clearing Request Queue")
                 sleep(0.5)
+
+            if self.mined > 20:
+                self.fail_safe()
+            logging.info("Failsafe Activation at " + (self.mined / 20 * 100).__str__() + " %")
             warning_tfa = self.too_far_away()
             ore_type, confidence = self.what_is_in_area()
             logging.info("Ahead of me is " + ore_type + " Confidence " + confidence.__str__())
@@ -53,6 +71,8 @@ class Vision:
                 self.dispatcher.request_tool_event(lambda: controller.Mine(self.dispatcher))
                 logging.debug("Clearing Movement and Rotation")
                 self.dispatcher.clear_movement_rotation()
+                self.mined = 0
+                self.sum_mined += random.randint(38, 358)
             elif warning_tfa and self.too_f_away_counter > 3:
                 self.too_f_away_counter = 0
                 if not self.rotate_to_closest_ore():
@@ -66,6 +86,8 @@ class Vision:
                 logging.info("Rotating to closest ore")
                 self.too_f_away_counter = 0
                 self.rotate_to_closest_ore()
+            self.mined += 1
+            logging.info("$$$ Mined so far " + self.sum_mined.__str__() + " ore")
 
     def train_model_realtime(self):
         data_dir = "selftrain"
@@ -152,6 +174,12 @@ class Vision:
             if abs(self.angle_sum) > 30:
                 self.angle_sum = 0
                 logging.info("Angle in X is higher than 30 -> Reset")
+            elif abs(self.angle_down) > 90:
+                self.angle_down = 0
+                if self.angle_down > 0:
+                    self.dispatcher.request_rotate(lambda: controller.LookUp(self.dispatcher, 30))
+                else:
+                    self.dispatcher.request_rotate(lambda: controller.LookDown(self.dispatcher, 30))
 
             if highest[0] == "left" and highest[2] and highest[1] > ore_threshold:
                 logging.info("Requesting Rotation Left")

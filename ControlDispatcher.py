@@ -7,6 +7,8 @@ from time import sleep
 class ControlDispatcher:
 
     def __init__(self, window):
+        self.stopped_fin = False
+        self.paused = False
         self.stopped = True
         self.mining = False
         self.camera_queue = Queue()
@@ -35,8 +37,16 @@ class ControlDispatcher:
     def stop(self, a=None, b=None):
         if a.name == "esc":
             self.stopped = True
+            self.stopped_fin = True
             logging.info("User requested stop... Stopping")
             self.window.minimize()
+        elif a.name == "pause":
+            self.stopped = True
+            self.paused = not self.paused
+            if self.paused:
+                logging.info("Paused")
+            else:
+                logging.info("Unpause")
 
     def clear_movement_rotation(self):
         self.movement_queue.queue.clear()
