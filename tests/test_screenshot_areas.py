@@ -12,20 +12,25 @@ from vision import Vision
 class MyTestCase(unittest.TestCase):
     def test_areas(self):
         # TODO: pass function that will be called if is too far away and if see ore
-        my = pygetwindow.getWindowsWithTitle("Dual Universe")[0]
+        my = pygetwindow.getWindowsWithTitle("Fotky")[0]
         vision = Vision(my, None, None)
         pyautogui.screenshot("left.png", region=vision.get_left_area(0.0))
-        pyautogui.screenshot("right.png", region=vision.get_right_area(0.3))
-        pyautogui.screenshot("top.png", region=vision.get_top_area(0.2))
-        pyautogui.screenshot("bottom.png", region=vision.get_bottom_area(0.2))
+        pyautogui.screenshot("right.png", region=vision.get_right_area(0.0))
+        pyautogui.screenshot("top.png", region=vision.get_top_area(0.0))
+        pyautogui.screenshot("bottom.png", region=vision.get_bottom_area(0.0))
         pyautogui.screenshot("center.png", region=vision.get_center_area())
-        classifier = Classifier("../models/ores_n_v1_aug")
+        classifier = Classifier("../models/ores_a_v3_soft")
         print(classifier.predict("left.png"))
         print(classifier.predict("right.png"))
         print(classifier.predict("top.png"))
         print(classifier.predict("bottom.png"))
         print(classifier.predict("center.png"))
-        print(classifier.predict("../samples/4444.png"))
+        print("Prediction of Warnings")
+        print(classifier.predict("../samples/5555.png"))
+        print(classifier.predict("../samples/6666.png"))
+        print(classifier.predict("../samples/7777.png"))
+        print(classifier.predict("../images/warning/out_0_32-1158757324.jpg"))
+        print(classifier.predict("../images/warning/out_0_256-407192141.jpg"))
 
     def test_realtime(self):
         classifier = Classifier("../models/ores_l_v2")
