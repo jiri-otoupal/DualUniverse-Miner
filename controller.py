@@ -5,6 +5,7 @@ import time
 import pyautogui
 import pydirectinput as pydirectinput
 
+from ControlDispatcher import ControlDispatcher
 from config import rotation_angle
 
 SendInput = ctypes.windll.user32.SendInput
@@ -150,24 +151,39 @@ def OpenInventory(t: float):
     PressAndRelease(t, open_inventory)
 
 
-def LookLeft(angle: int = rotation_angle):
+def LookLeft(dispatcher, angle: float = rotation_angle):
+    if dispatcher.mining:
+        return
+    dispatcher.mr_undergoing = True
+    logging.info("Rotating Left Start")
     PressKey(Left)
     time.sleep((1.79 / 360) * angle)
     ReleaseKey(Left)
+    logging.info("Rotating Left Stop")
+    dispatcher.mr_undergoing = False
 
 
-def LookRight(angle: int = rotation_angle):
+def LookRight(dispatcher, angle: float = rotation_angle):
+    if dispatcher.mining:
+        return
+    dispatcher.mr_undergoing = True
+    logging.info("Rotating Right Start")
     PressKey(Right)
     time.sleep((1.79 / 360) * angle)
     ReleaseKey(Right)
+    logging.info("Rotating Right Stop")
+    dispatcher.mr_undergoing = False
 
 
-def Jump():
+def Jump(dispatcher):
+    dispatcher.mr_undergoing = True
     PressAndRelease(1.2, SPACE)
+    dispatcher.mr_undergoing = False
 
 
 def Mine(dispatcher):
     # Mutex True
+    dispatcher.clear_movement_rotation()
     dispatcher.mining = True
     logging.info("Mining...")
     pyautogui.mouseDown()
@@ -178,21 +194,35 @@ def Mine(dispatcher):
     logging.info("Finished Mining")
 
 
-def LookUp(angle: int = rotation_angle):
+def LookUp(dispatcher, angle: float = rotation_angle):
+    if dispatcher.mining:
+        return
+    dispatcher.mr_undergoing = True
+    logging.info("Rotating Up Start")
     PressKey(Up)
     time.sleep((1.79 / 360) * angle)
     ReleaseKey(Up)
+    logging.info("Rotating Up Stop")
+    dispatcher.mr_undergoing = False
 
 
-def LookDown(angle: int = rotation_angle):
+def LookDown(dispatcher, angle: float = rotation_angle):
+    if dispatcher.mining:
+        return
+    dispatcher.mr_undergoing = True
+    logging.info("Rotating Down Start")
     PressKey(Down)
     time.sleep((1.79 / 360) * angle)
     ReleaseKey(Down)
+    logging.info("Rotating Down Stop")
+    dispatcher.mr_undergoing = False
 
 
 if __name__ == '__main__':
+    disp = ControlDispatcher(None)
     time.sleep(3)
-    LookUp()
-    LookDown()
-    LookLeft()
-    LookRight()
+    print("Testing Sensitivity")
+    for i in range(1, 10):
+        LookUp(disp, i / 3)
+        print("Pressed " + (i / 3).__str__())
+        time.sleep(3)

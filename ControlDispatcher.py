@@ -18,6 +18,7 @@ class ControlDispatcher:
         self.t3: Thread = None
         self.t4: Thread = None
         self.window = window
+        self.mr_undergoing = False  # Movement or rotation in progress
 
     def start(self):
         self.stopped = False

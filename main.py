@@ -98,7 +98,7 @@ if __name__ == '__main__':
     # TODO: pass function that will be called if is too far away and if see ore
     vision = Vision(my, classifier, dispatcher)
     dispatcher.start()
-    vision.start()
+    vision_thread = vision.start()
     sleep(0.1)
     controller.SwitchToHarvest(0.05)
     controller.SwitchToMining(0.05)
@@ -106,7 +106,6 @@ if __name__ == '__main__':
     if full_auto:
         controller.maximize_mining_circle()
     logging.info("Maximized")
-    while dispatcher.t1.is_alive():
-        sleep(1)
+    vision_thread.join()
     my.minimize()
     logging.info("Stopped")

@@ -32,33 +32,40 @@ class Vision:
         self.angle_down = 0
 
     def start(self):
-        Thread(target=self._recognize_in_loop_center, daemon=True).start()
+        thread = Thread(target=self._recognize_in_loop_center)
+        thread.start()
+        return thread
 
     def _recognize_in_loop_center(self):
         while not self.dispatcher.stopped:
-            if self.dispatcher.tool_control_queue.empty() and self.dispatcher.movement_queue.empty() and self.dispatcher.camera_queue.empty():
-                warning_tfa = self.too_far_away()
-                ore_type, confidence = self.what_is_in_area()
-                logging.info("Ahead of me is " + ore_type + " Confidence " + confidence.__str__())
-                is_ore = ore_type in ore_list
-                if is_ore and confidence > 0.5 and not warning_tfa:
-                    logging.info("Requesting Mine of " + ore_type)
-                    self.dispatcher.request_tool_event(lambda: controller.Mine(self.dispatcher))
-                    logging.debug("Clearing Movement and Rotation")
-                    self.dispatcher.clear_movement_rotation()
-                elif warning_tfa and self.too_f_away_counter > 3:
-                    self.too_f_away_counter = 0
-                    if not self.rotate_to_closest_ore():
-                        self.dispatcher.request_rotate(lambda: controller.LookRight(90))
-                        logging.debug("Requesting Rotation Right Because none ore was found")
-                elif warning_tfa:
-                    logging.info("Too Far Away ! => Requesting Jump and Movement")
-                    self.dispatcher.request_jump(controller.Jump)
-                    self.dispatcher.request_movement(lambda: controller.Forward(forward_time))
-                else:
-                    logging.info("Rotating to closest ore")
-                    self.too_f_away_counter = 0
-                    self.rotate_to_closest_ore()
+            while not (self.dispatcher.tool_control_queue.empty() and
+                       self.dispatcher.movement_queue.empty() and
+                       self.dispatcher.camera_queue.empty() and
+                       not self.dispatcher.mr_undergoing) and not self.dispatcher.stopped:
+                logging.info("Waiting for Clearing Request Queue")
+                sleep(0.5)
+            warning_tfa = self.too_far_away()
+            ore_type, confidence = self.what_is_in_area()
+            logging.info("Ahead of me is " + ore_type + " Confidence " + confidence.__str__())
+            is_ore = ore_type in ore_list
+            if is_ore and confidence > 0.5 and not warning_tfa:
+                logging.info("Requesting Mine of " + ore_type)
+                self.dispatcher.request_tool_event(lambda: controller.Mine(self.dispatcher))
+                logging.debug("Clearing Movement and Rotation")
+                self.dispatcher.clear_movement_rotation()
+            elif warning_tfa and self.too_f_away_counter > 3:
+                self.too_f_away_counter = 0
+                if not self.rotate_to_closest_ore():
+                    self.dispatcher.request_rotate(lambda: controller.LookRight(self.dispatcher, 90))
+                    logging.debug("Requesting Rotation Right Because none ore was found")
+            elif warning_tfa:
+                logging.info("Too Far Away ! => Requesting Jump and Movement")
+                self.dispatcher.request_jump(lambda: controller.Jump(self.dispatcher))
+                self.dispatcher.request_movement(lambda: controller.Forward(forward_time))
+            else:
+                logging.info("Rotating to closest ore")
+                self.too_f_away_counter = 0
+                self.rotate_to_closest_ore()
 
     def train_model_realtime(self):
         data_dir = "selftrain"
@@ -83,7 +90,7 @@ class Vision:
             image_size=(32, 32),
             batch_size=32)
         self.classifier.model.fit(train_ds, val_ds, epochs=1)
-        self.dispatcher.request_rotate(lambda: controller.LookRight(10))
+        self.dispatcher.request_rotate(lambda: controller.LookRight(self.dispatcher, 10))
 
     def evaluate_area(self):
         circle_index = 0
@@ -114,15 +121,15 @@ class Vision:
         logging.info("Did not found Closest ore... requesting blind search")
         if abs(self.angle_sum) < 360:
             logging.info("Did not found ore... Rotating Right")
-            self.dispatcher.request_rotate(lambda: controller.LookRight(45))
+            self.dispatcher.request_rotate(lambda: controller.LookRight(self.dispatcher, 45))
         elif abs(self.angle_down) < 45:
             self.angle_sum = 0
             logging.info("Nothing in X axis trying to rotate Down for ore")
-            self.dispatcher.request_rotate(lambda: controller.LookDown(rotation_angle))
+            self.dispatcher.request_rotate(lambda: controller.LookDown(self.dispatcher, rotation_angle))
             self.angle_down += 1
         else:
             logging.info("Nothing in X axis trying to rotate Up for ore")
-            self.dispatcher.request_rotate(lambda: controller.LookUp(90))
+            self.dispatcher.request_rotate(lambda: controller.LookUp(self.dispatcher, 90))
             self.angle_down = 0
             self.angle_sum = 0
 
@@ -149,26 +156,26 @@ class Vision:
             if highest[0] == "left" and highest[2] and highest[1] > ore_threshold:
                 logging.info("Requesting Rotation Left")
                 self.dispatcher.clear_movement_rotation()
-                self.dispatcher.request_rotate(controller.LookLeft)
+                self.dispatcher.request_rotate(lambda: controller.LookLeft(self.dispatcher))
                 self.angle_sum -= 1
                 return direction_left
             elif highest[0] == "right" and highest[2] and highest[1] > ore_threshold:
                 logging.info("Requesting Rotation Right")
                 self.dispatcher.clear_movement_rotation()
-                self.dispatcher.request_rotate(controller.LookRight)
+                self.dispatcher.request_rotate(lambda: controller.LookRight(self.dispatcher))
                 self.angle_sum += 1
                 return direction_right
             elif highest[0] == "top" and highest[2] and highest[1] > ore_threshold:
                 logging.info("Requesting Rotation Up")
                 self.dispatcher.clear_movement_rotation()
-                self.dispatcher.request_rotate(controller.LookUp)
+                self.dispatcher.request_rotate(lambda: controller.LookUp(self.dispatcher))
                 self.angle_sum = 0
                 self.angle_down -= 1
                 return direction_top
             elif highest[0] == "bottom" and highest[2] and highest[1] > ore_threshold:
                 logging.info("Requesting Rotation Down")
                 self.dispatcher.clear_movement_rotation()
-                self.dispatcher.request_rotate(controller.LookDown)
+                self.dispatcher.request_rotate(lambda: controller.LookDown(self.dispatcher))
                 self.angle_down += 1
                 self.angle_sum = 0
                 return direction_bottom
