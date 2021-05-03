@@ -25,6 +25,7 @@ dont_move = False  # This results in not moving on request
 
 
 # ------------------------- Bot Settings ---------------------------#
+prediction_batch_size = 8
 ore_threshold = 0.6  # Percent
 full_auto = False  # Will increase mining radius ( SLOW )
 model_to_use = "models/ores_a_v3_soft"  # Model to use for recognition

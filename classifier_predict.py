@@ -8,6 +8,8 @@ from tensorflow.python.keras.backend import expand_dims
 from tensorflow.python.keras.models import load_model, Model
 from tensorflow.python.keras.preprocessing.image import img_to_array, load_img
 
+from config import prediction_batch_size
+
 
 class Classifier:
 
@@ -32,7 +34,7 @@ class Classifier:
         img = load_img(os.path.normpath(path_to_img), target_size=(32, 32))
         img_array = img_to_array(img)
         img_array = expand_dims(img_array, 0)  # Create a batch
-        predictions = self.model.predict(img_array, batch_size=8)
+        predictions = self.model.predict(img_array, batch_size=prediction_batch_size)
         score = tf.nn.softmax(predictions[0])
         logging.debug("Prediction took %.4f sec" % (time() - t0))
         self.time = (time() - t0)
