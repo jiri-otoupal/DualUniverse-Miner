@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "ores-312413",
+  "private_key_id": "64d3129078925e69e4971e6e5ae9828e2a153474",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCplEAat7vlFMxc\nt4tI5VKwJgIV2uk8TttxA+foAAl2JdlYUSIMnamOIqePVpS/VBsoWLlTNEYNENyy\n6ZW/CQkBQgn8oY23eNncSl0HwqNSq8bOtplRKcP6vgQmbufGh5gucbULcBaGktuG\nkMaQFWEZGdr+2VciLdno2o0kUT9aaiSe+bENR0NlRLSqO2D7kKrkyVqOQ7c8H7HB\nK5aGVZZmDXj6iqUNaiJLVm07g4PJ5ZzwkQyoB6nX5f50bQ2zUmm+NdLfXJWjTOyZ\nYlbecQGrAJojs+1+sdY5ND4Pk20LeML35NVHzVkhatzQug+132VI/yXRBeBIGapR\n2QApaPtnAgMBAAECggEACORK2qZ0dgJrkCWuFPBCsBVEVmR6FORKTlvorqvTKIOe\nxSo+IzP88C9jxiqWxHBmYiW0Ym44bP29ha0zfi3nmnjIYn8rp/tUFRlaOKcA/pEC\nQimJC7jT+AxX1iS8Bwj4UzXHrp7oewS7h7ahHIkW5D2MjLmcYxJ32eVWBu75rvBm\n01V5s8YsPx6K3yR3WTVigGMEM2oy7E+ORtscJJ/LK7Dm9RvAtR7i783RXExb4Cmg\n8bnlZndouYlnrG/+JY+5mEjeYEmGe8vhZftNtC8W4HY8+A/amDeX+g3DWlVoiXqu\nywZXYeETA7r1wiaaU3kW3F3TFe1DF3LpLdq5KE1pYQKBgQDtS37dCKgUd3+gpPrp\na+klXxPaIwiLW6Icm7LWHFp5TUtUDPRBBaKTVRdQoMZUzSLLq6VSdm3bBL89/H0e\nbmEWHUB/2KiNASTbdGn++iCp1E++sCZeJVUlen2lNYDaY9t4lTTVchU/8Bzl2Vd/\nmEHE9QTI4NISJhr00hnZEPK74QKBgQC28kfKgmgUN2rYwLfzytECSMLQQF+8j7iV\n+PB2w8VVfv7kw8y+6Mxkb1OGJkWP09Qt/tXZVMxW+dSUHxy766BdsHGlw5OZYr65\n9MfLeo1TnyHraJk8a6luuLcHwxmMRu8t9TEnntKGEmLZeEMtO2mYKEnRRFucJoGH\nO7jJV/LgRwKBgGLnuLUASq5dMIEQwtRP+hlti6S8PW94fhVWgC/mGX+9y8v4qkX/\nx0eJi/I7UO8/oWUq4fmBC0DitaNsfeoVL7o77wpaj8ZV17rwxs1UDBE9QQ/F8/gB\nr3+zknMt3cspG+0io6bjqh/AQQs8j8/K8n7ZcWkY6/ZMk6e/eq6S9dmBAoGAZF8A\nrEZnu8+7uzfgtMytZ0dsOr1WySlA6Gcv5rj55zJJvlD+YC9xFBlQBeWxfHuHicSq\npxYzFfTzgGChbyiTT1OixoNK03itk3CMvUJ7j0lbXsCAcfnPd4O4R3Xu6ltwlhJT\n6Zzle9FSkmW81XAnOue/uCR87mrh3cQSWcT657kCgYBq/HST7xOupm2iIP2db5fm\n+VBAh+jDT4JhOphF2tojTix44PgcoOIE2IYTFpePOukZeosCfScSBSE17eXRXU8A\n1JkE+2oQD7iNv7FBxeS1EnX9gDdIdYl8RujqIneXTrimcMi/C+q3Gc0avkJK36FV\nRfkHJq6DiXdFpkfaxXiBVQ==\n-----END PRIVATE KEY-----\n",
+  "client_email": "opaka-716@ores-312413.iam.gserviceaccount.com",
+  "client_id": "116366437427587636460",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/opaka-716%40ores-312413.iam.gserviceaccount.com"
+}

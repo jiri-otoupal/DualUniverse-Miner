@@ -25,6 +25,7 @@ dont_move = False  # This results in not moving on request
 
 
 # ------------------------- Bot Settings ---------------------------#
+failsafe_timeout = 50  # Cycles in which timeout and do some movement to unblock
 cloud = False
 prediction_batch_size = 8
 ore_threshold = 0.6  # Percent

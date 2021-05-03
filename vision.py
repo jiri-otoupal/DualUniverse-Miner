@@ -10,7 +10,8 @@ import pyautogui
 import tensorflow as tf
 
 import controller
-from config import ore_list, rotation_angle, forward_time, ore_threshold, circle_index_tempo, circle_index_loop
+from config import ore_list, rotation_angle, forward_time, ore_threshold, circle_index_tempo, circle_index_loop, \
+    failsafe_timeout
 
 direction_left = -1
 direction_right = 1
@@ -59,9 +60,9 @@ class Vision:
                 logging.info("Waiting for Clearing Request Queue")
                 sleep(0.5)
 
-            if self.mined > 20:
+            if self.mined > failsafe_timeout:
                 self.fail_safe()
-            logging.info("Failsafe Activation at " + (self.mined / 20 * 100).__str__() + " %")
+            logging.info("Failsafe Activation at " + (self.mined / failsafe_timeout * 100).__str__() + " %")
             warning_tfa = self.too_far_away()
             ore_type, confidence = self.what_is_in_area()
             logging.info("Ahead of me is " + ore_type + " Confidence " + confidence.__str__())
