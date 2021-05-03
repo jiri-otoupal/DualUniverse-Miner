@@ -1,9 +1,17 @@
 """
 
+
+      @@@  @@@@@@  @@@@@@@  @@@  @@@ @@@@@@@@ @@@
+      @@! @@!  @@@ @@!  @@@ @@!  @@@ @@!      @@!
+      !!@ @!@  !@! @!@  !@! @!@  !@! @!!!:!   @!!
+  .  .!!  !!:  !!! !!:  !!!  !: .:!  !!:      !!:
+  ::.::    : :. :  :: :  :     ::    : :: ::  : ::.: :
+
+
 Dual Universe Bot
 
 
-Copyright Jiri Otoupal, Dominik Deak
+Copyright Jiri Otoupal, Dominik Deak, Vojta
 
 c 2021
 
@@ -19,14 +27,32 @@ from silence_tensorflow import silence_tensorflow
 
 import controller
 from ControlDispatcher import ControlDispatcher
-from config import model_to_use, log_level, full_auto
+from config import model_to_use, log_level, full_auto, logo
 from logger import config_logger
 
-if __name__ == '__main__':
 
+def activate_window(my):
+    try:
+        my.activate()
+    except:
+        pass
+    if not my.isActive:
+        sleep(0.5)
+        activate_window(my)
+    else:
+        return True
+    sleep(0.1)
+    if not my.isActive:
+        logging.fatal("Windows had problem activating window... Stopping")
+        return False
+    return True
+
+
+if __name__ == '__main__':
+    print(logo)
     pyautogui.FAILSAFE = False
     config_logger(log_level)
-    logging.info("Starting Dual TTB Bot !")
+    logging.info("Starting JoDVel Bot !")
     logging.info("Loading Neural Net Model [" + model_to_use + "]... Please Wait")
     silence_tensorflow()
     from classifier_predict import Classifier
@@ -65,6 +91,8 @@ if __name__ == '__main__':
         logging.info("Dual Universe instances: [" + window + "]")
     my = pygetwindow.getWindowsWithTitle(dual_windows[0])[0]
     my.maximize()
+    if not activate_window(my):
+        exit(1)
     dispatcher = ControlDispatcher(my)
     keyboard.hook(dispatcher.stop)
     # TODO: pass function that will be called if is too far away and if see ore

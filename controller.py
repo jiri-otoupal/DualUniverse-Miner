@@ -1,4 +1,5 @@
 import ctypes
+import logging
 import time
 
 import pyautogui
@@ -163,10 +164,16 @@ def Jump():
     PressAndRelease(1.2, SPACE)
 
 
-def Mine():
+def Mine(dispatcher):
+    # Mutex True
+    dispatcher.mining = True
+    logging.info("Mining...")
     pyautogui.mouseDown()
     time.sleep(1.9)
     pyautogui.mouseUp()
+    # Mutex False
+    dispatcher.mining = False
+    logging.info("Finished Mining")
 
 
 def LookUp(angle: int = 30):

@@ -4,9 +4,9 @@ from time import time
 
 import numpy as np
 import tensorflow as tf
-from tensorflow import keras
 from tensorflow.python.keras.backend import expand_dims
-from tensorflow.python.keras.models import load_model
+from tensorflow.python.keras.models import load_model, Model
+from tensorflow.python.keras.preprocessing.image import img_to_array, load_img
 
 
 class Classifier:
@@ -17,7 +17,8 @@ class Classifier:
         :param model:
         """
         self.time = 0
-        self.model = load_model(model)
+        self.model: Model = load_model(model)
+        self.model.trainable = False
         self.class_names = ['hematite', 'terrain', 'warning']
 
     def predict(self, path_to_img) -> [str, float]:
@@ -28,8 +29,8 @@ class Classifier:
         :return: class and percent confidence 0-1
         """
         t0 = time()
-        img = keras.preprocessing.image.load_img(os.path.normpath(path_to_img), target_size=(32, 32))
-        img_array = keras.preprocessing.image.img_to_array(img)
+        img = load_img(os.path.normpath(path_to_img), target_size=(32, 32))
+        img_array = img_to_array(img)
         img_array = expand_dims(img_array, 0)  # Create a batch
         predictions = self.model.predict(img_array)
         score = tf.nn.softmax(predictions[0])
