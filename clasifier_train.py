@@ -66,8 +66,7 @@ data_augmentation = keras.Sequential(
                                                                   img_width,
                                                                   3)),
         layers.experimental.preprocessing.RandomRotation(0.5),
-        layers.experimental.preprocessing.RandomContrast(0.2),
-        layers.experimental.preprocessing.RandomZoom(0.5)
+        layers.experimental.preprocessing.RandomZoom(0.2)
     ]
 )
 model = Sequential([
@@ -81,7 +80,7 @@ model = Sequential([
     layers.MaxPooling2D(),
     layers.Conv2D(128, 3, padding='same', activation='relu'),
     layers.MaxPooling2D(),
-    layers.Dropout(0.1),
+    layers.Dropout(0.2),
     layers.Flatten(),
     layers.Dense(256, activation='relu'),
     # layers.Dense(num_classes, "softmax")
@@ -100,7 +99,7 @@ history = model.fit(
     epochs=epochs, use_multiprocessing=True
 )
 model.save(model_name)
-
+exit(0)
 
 model.fit(
     train_generator, validation_data=val_ds,

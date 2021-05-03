@@ -33,7 +33,7 @@ class MyTestCase(unittest.TestCase):
         print(classifier.predict("../images/warning/out_0_256-407192141.jpg"))
 
     def test_realtime(self):
-        classifier = Classifier("../models/ores_l_v2")
+        classifier = Classifier("../models/ores_a_v3_soft")
         my = pygetwindow.getWindowsWithTitle("Dual Universe")[0]
         vision = Vision(my, classifier, None)
         while True:

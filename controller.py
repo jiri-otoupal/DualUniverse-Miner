@@ -5,6 +5,8 @@ import time
 import pyautogui
 import pydirectinput as pydirectinput
 
+from config import rotation_angle
+
 SendInput = ctypes.windll.user32.SendInput
 
 W = 0x11
@@ -148,13 +150,13 @@ def OpenInventory(t: float):
     PressAndRelease(t, open_inventory)
 
 
-def LookLeft(angle: int = 45):
+def LookLeft(angle: int = rotation_angle):
     PressKey(Left)
     time.sleep((1.79 / 360) * angle)
     ReleaseKey(Left)
 
 
-def LookRight(angle: int = 45):
+def LookRight(angle: int = rotation_angle):
     PressKey(Right)
     time.sleep((1.79 / 360) * angle)
     ReleaseKey(Right)
@@ -176,13 +178,13 @@ def Mine(dispatcher):
     logging.info("Finished Mining")
 
 
-def LookUp(angle: int = 30):
+def LookUp(angle: int = rotation_angle):
     PressKey(Up)
     time.sleep((1.79 / 360) * angle)
     ReleaseKey(Up)
 
 
-def LookDown(angle: int = 30):
+def LookDown(angle: int = rotation_angle):
     PressKey(Down)
     time.sleep((1.79 / 360) * angle)
     ReleaseKey(Down)
