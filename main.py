@@ -109,3 +109,4 @@ if __name__ == '__main__':
     vision_thread.join()
     my.minimize()
     logging.info("Stopped")
+

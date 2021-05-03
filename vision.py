@@ -41,16 +41,16 @@ class Vision:
 
     def fail_safe(self):
         if self.angle_down > 0:
-            self.angle_down -= 1
+            self.angle_down = -1
             self.dispatcher.request_rotate(lambda: controller.LookUp(self.dispatcher, 30))
         else:
-            self.angle_down += 1
+            self.angle_down = 1
             self.dispatcher.request_rotate(lambda: controller.LookDown(self.dispatcher, 30))
         if self.angle_sum > 0:
-            self.angle_sum -= 1
+            self.angle_sum = -1
             self.dispatcher.request_rotate(lambda: controller.LookLeft(self.dispatcher, 30))
         else:
-            self.angle_sum += 1
+            self.angle_sum = 1
             self.dispatcher.request_rotate(lambda: controller.LookRight(self.dispatcher, 30))
         self.dispatcher.request_jump(lambda: controller.Jump(self.dispatcher))
         self.dispatcher.request_movement(lambda: controller.Forward(forward_time))
