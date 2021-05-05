@@ -1,18 +1,11 @@
-from threading import Thread
-from time import sleep
+import unittest
+from time import sleep, time
 
 import cv2
-import unittest
-
+import imutils
 import numpy as np
-import pyautogui
 import pydirectinput as pydirectinput
-from matplotlib import pyplot as plt
-from numpy.lib.stride_tricks import as_strided
-from scipy.ndimage import gaussian_filter
-
-from main import image_to_matrix, image_weight_by_color, image_recognize_by_color, intersect_colors, image_recognize, \
-    image_weight, compare_to_all_samples, apply_filter, img_frombytes, apply_filter_dilation, unsharp_mask, blur
+import pytesseract
 
 
 class MyTestCase(unittest.TestCase):
@@ -33,22 +26,35 @@ class MyTestCase(unittest.TestCase):
         return sharpened
 
     def test_something(self):
-        imgs = image_to_matrix("../images/samples/lacobus2.png")
-        # tools = pyocr.get_available_tools()
-        # langs = tools[0].get_available_languages()
-        # digits = tools[0].image_to_string(
-        #    Image.open("../images/samples/fullhdlacobus.png"),
-        #    lang=langs[0],
-        #    builder=pyocr.tesseract.DigitBuilder()
-        # )
-        # print(digits)
+        # imgs = image_to_matrix("../images/samples/lacobus2.png")
 
-        rec = compare_to_all_samples(imgs, False)
-        mat = apply_filter(rec, 100)
-        mat = blur(mat, 1)
-        c = unsharp_mask(mat, 5, 5, 1)
-        # c = apply_filter_dilation(mat, 2)
-        img_frombytes(c).show()
+        t0 = time()
+        pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+        image = cv2.imread("../samples/height.png", 0)
+        image = imutils.resize(image, width=143)
+        thresh = cv2.threshold(image, 150, 255, cv2.THRESH_BINARY_INV)[1]
+
+        kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
+        close = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, kernel)
+
+        result = 255 - close
+        result = cv2.GaussianBlur(result, (5, 5), 0)
+
+        data = pytesseract.image_to_string(result, lang='eng', config='--psm 10')
+        processed_data = ''.join(char for char in data if char.isnumeric() or char == '.' or char == "-")
+        print(data)
+        print(processed_data)
+
+        cv2.imshow('thresh', thresh)
+        cv2.imshow('close', close)
+        cv2.imshow('result', result)
+        print(time() - t0)
+        # rec = compare_to_all_samples(imgs, False)
+        # mat = apply_filter(rec, 100)
+        # mat = blur(mat, 1)
+        # c = unsharp_mask(mat, 5, 5, 1)
+        ## c = apply_filter_dilation(mat, 2)
+        # img_frombytes(c).show()
 
     def test_auto(self):
         sleep(5)

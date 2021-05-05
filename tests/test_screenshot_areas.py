@@ -57,6 +57,20 @@ class MyTestCase(unittest.TestCase):
                     break
                 circle_index += 0.1
 
+    def test_matrix(self):
+        left = np.array(("left", "hematite", 0.8), dtype=object)
+        right = np.array(("right", "hematite", 0.8), dtype=object)
+        top = np.array(("top", "hematite", 0.8), dtype=object)
+        bottom = np.array(("bottom", "terrain", 0.8),
+                          dtype=object)
+        zipped = np.vstack([left, right, top, bottom])
+        by_confidence = np.flip(zipped[np.argsort(zipped[:, 1])])
+        print("Matrix b compare ", by_confidence)
+        by_confidence[:, 2] = np.isin(by_confidence[:, 2], ore_list)
+        print("Matrix ", by_confidence)
+        by_confidence = np.delete(by_confidence, np.where(by_confidence[:, 2] == False)[0], 0)
+        pass
+
 
 if __name__ == '__main__':
     unittest.main()

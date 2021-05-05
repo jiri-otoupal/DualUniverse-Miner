@@ -6,7 +6,7 @@ from tensorflow.keras import layers
 from tensorflow.keras.models import Sequential
 from tensorflow.python.keras.preprocessing.image import ImageDataGenerator
 
-model_name = "models/ores_a_v3_soft"
+model_name = "models/ores_a_v4_soft"
 epochs = 10
 batch_size = 32
 img_height = 32
