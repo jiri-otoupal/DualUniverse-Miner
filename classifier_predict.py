@@ -18,7 +18,7 @@ class Classifier:
         self.time = 0
         self.model: Model = load_model(model)
         self.model.trainable = False
-        self.class_names = ['hematite', 'terrain', 'warning']
+        self.class_names = ['ore', 'signal', 'terrain', 'warning']
 
     def predict(self, path_to_img) -> [str, float]:
         """

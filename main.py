@@ -71,7 +71,7 @@ if __name__ == '__main__':
     with console.status("[bold green]Predicting... ") as status:
         while tasks:
             c, confidence = classifier.predict("samples/test_sample.png")
-            if c != "hematite":
+            if c != "ore":
                 logging.fatal("Test Sample is incorrectly identified as " + c + " !")
             c, confidence = classifier.predict("samples/lacobus_test.png")
             if c != "terrain":
