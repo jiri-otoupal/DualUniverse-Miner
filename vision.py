@@ -168,10 +168,6 @@ class Vision:
         logging.info("Angle on X axis Sum " + self.angle_sum.__str__())
         logging.info("Angle on Y axis Sum " + self.angle_down.__str__())
         if by_confidence is not None and np.size(by_confidence) > 0:
-            if np.any(np.isin(by_confidence[:, 0], ["left", "right"])):
-                by_confidence = np.delete(by_confidence, np.where(by_confidence[:, 0] == "top")[0], 0)
-                by_confidence = np.delete(by_confidence, np.where(by_confidence[:, 0] == "bottom")[0], 0)
-                logging.info("Prioritizing X Axis mining")
             highest = by_confidence[0]
             logging.info("Best now: " + highest[0] + " Ore: " + str(highest[2]))
 
