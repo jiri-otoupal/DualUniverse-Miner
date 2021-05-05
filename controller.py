@@ -6,7 +6,7 @@ import pyautogui
 import pydirectinput as pydirectinput
 
 from ControlDispatcher import ControlDispatcher
-from config import rotation_angle
+from config import rotation_angle, mining_time_sphere
 
 SendInput = ctypes.windll.user32.SendInput
 
@@ -152,6 +152,7 @@ def OpenInventory(t: float):
 
 
 def LookLeft(dispatcher, angle: float = rotation_angle):
+    logging.info("Rotating by " + rotation_angle.__str__() + " degrees")
     if dispatcher.mining:
         return
     dispatcher.mr_undergoing = True
@@ -164,6 +165,7 @@ def LookLeft(dispatcher, angle: float = rotation_angle):
 
 
 def LookRight(dispatcher, angle: float = rotation_angle):
+    logging.info("Rotating by " + rotation_angle.__str__() + " degrees")
     if dispatcher.mining:
         return
     dispatcher.mr_undergoing = True
@@ -187,7 +189,7 @@ def Mine(dispatcher):
     dispatcher.mining = True
     logging.info("Mining...")
     pyautogui.mouseDown()
-    time.sleep(1.9)
+    time.sleep(mining_time_sphere)
     pyautogui.mouseUp()
     # Mutex False
     dispatcher.mining = False
@@ -195,6 +197,7 @@ def Mine(dispatcher):
 
 
 def LookUp(dispatcher, angle: float = rotation_angle):
+    logging.info("Rotating by " + rotation_angle.__str__() + " degrees")
     if dispatcher.mining:
         return
     dispatcher.mr_undergoing = True
@@ -207,12 +210,13 @@ def LookUp(dispatcher, angle: float = rotation_angle):
 
 
 def LookDown(dispatcher, angle: float = rotation_angle):
+    logging.info("Rotating by " + rotation_angle.__str__() + " degrees")
     if dispatcher.mining:
         return
     dispatcher.mr_undergoing = True
     logging.info("Rotating Down Start")
     PressKey(Down)
-    time.sleep((1.79 / 360) * angle)
+    time.sleep((1.79 / 360) * rotation_angle)
     ReleaseKey(Down)
     logging.info("Rotating Down Stop")
     dispatcher.mr_undergoing = False
@@ -223,6 +227,6 @@ if __name__ == '__main__':
     time.sleep(3)
     print("Testing Sensitivity")
     for i in range(1, 10):
-        LookUp(disp, i / 3)
+        LookLeft(disp, i / 3)
         print("Pressed " + (i / 3).__str__())
         time.sleep(3)

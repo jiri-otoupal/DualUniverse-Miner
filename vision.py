@@ -137,7 +137,7 @@ class Vision:
                 break
             circle_index += circle_index_tempo
             logging.info("Did not found ore -> decreasing circle")
-        return by_confidence, circle_index
+        return by_confidence, (circle_index + 1) * 10
 
     def request_blind_search(self):
         logging.info("Did not found Closest ore... requesting blind search")
@@ -168,7 +168,7 @@ class Vision:
         logging.info("Angle on X axis Sum " + self.angle_sum.__str__())
         logging.info("Angle on Y axis Sum " + self.angle_down.__str__())
         if by_confidence is not None and np.size(by_confidence) > 0:
-            if np.isin(by_confidence[:, 0], ["left", "right"]):
+            if np.any(np.isin(by_confidence[:, 0], ["left", "right"])):
                 by_confidence = np.delete(by_confidence, np.where(by_confidence[:, 0] == "top")[0], 0)
                 by_confidence = np.delete(by_confidence, np.where(by_confidence[:, 0] == "bottom")[0], 0)
                 logging.info("Prioritizing X Axis mining")
