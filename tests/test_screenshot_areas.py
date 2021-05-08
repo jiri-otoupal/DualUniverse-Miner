@@ -12,14 +12,16 @@ from vision import Vision
 class MyTestCase(unittest.TestCase):
     def test_areas(self):
         # TODO: pass function that will be called if is too far away and if see ore
-        my = pygetwindow.getWindowsWithTitle("Fotky")[0]
+        my = pygetwindow.getWindowsWithTitle("Dual Universe")[0]
         vision = Vision(my, None, None)
+        pyautogui.screenshot("ored.png", region=vision.get_ore_area())
         pyautogui.screenshot("left.png", region=vision.get_left_area(0.0))
         pyautogui.screenshot("right.png", region=vision.get_right_area(0.0))
         pyautogui.screenshot("top.png", region=vision.get_top_area(0.0))
         pyautogui.screenshot("bottom.png", region=vision.get_bottom_area(0.0))
         pyautogui.screenshot("center.png", region=vision.get_center_area())
-        classifier = Classifier("../models/ores_a_v3_soft")
+        classifier = Classifier("../models/ores_a_v4_soft")
+        print(classifier.predict("ored.png"))
         print(classifier.predict("left.png"))
         print(classifier.predict("right.png"))
         print(classifier.predict("top.png"))

@@ -73,8 +73,7 @@ class Vision:
                 self.dispatcher.clear_movement_rotation()
                 self.mined = 0
                 self.sum_mined += random.randint(5, 58)
-            elif warning_tfa and self.too_f_away_counter > 3:
-                self.too_f_away_counter = 0
+            elif warning_tfa and self.too_f_away_counter > 1:
                 if not self.rotate_to_closest_ore():
                     logging.info("Too Far Away ! => Requesting Jump and Movement")
                     self.dispatcher.request_jump(lambda: controller.Jump(self.dispatcher))
@@ -83,8 +82,8 @@ class Vision:
                 logging.info("Too Far Away ! => Requesting Movement")
                 self.dispatcher.request_movement(lambda: controller.Forward(forward_time))
             else:
-                logging.info("Rotating to closest ore")
                 self.too_f_away_counter = 0
+                logging.info("Rotating to closest ore")
                 self.rotate_to_closest_ore()
             self.mined += 1
             logging.info("$$$ Mined so far " + (self.sum_mined * 25 * 1.3 / 1000000).__str__() + " USD")
@@ -260,6 +259,12 @@ class Vision:
         starty = self.window.height // 1.23 - self.window.height * (0.36 - circle_index)
         return startx, starty, self.window.width - (self.window.width * 0.35 * 2), self.window.height * (
                 0.38 - circle_index)
+
+    def get_ore_area(self):
+        startx = self.window.width * 0.5
+        starty = self.window.height - self.window.height * 0.375
+        return startx, starty, 32, self.window.height * (
+            0.15)
 
     def get_warning_area(self):
         y, x = self.window.height, self.window.width

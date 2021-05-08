@@ -30,8 +30,8 @@ val_ds = tf.keras.preprocessing.image_dataset_from_directory(
     batch_size=batch_size)
 
 train_datagen = ImageDataGenerator(
-    rescale=1. / 255, zoom_range=[0.2, 1], rotation_range=90,
-    brightness_range=[0.8, 1.2], width_shift_range=0.2, height_shift_range=0.2, channel_shift_range=0.1)
+    rescale=1. / 255, zoom_range=[0.8, 1], rotation_range=15,
+    brightness_range=[0.8, 1.2], width_shift_range=0.1, height_shift_range=0.1, channel_shift_range=0.1)
 
 test_datagen = ImageDataGenerator(rescale=1. / 255)
 
