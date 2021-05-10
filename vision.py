@@ -46,8 +46,9 @@ class Vision:
         else:
             self.angle_down = 1
             self.dispatcher.request_rotate(lambda: controller.LookDown(self.dispatcher, 30))
-        self.dispatcher.request_jump(lambda: controller.Jump(self.dispatcher))
-        self.dispatcher.request_movement(lambda: controller.Forward(forward_time))
+        for _ in randint(1, 10):
+            self.dispatcher.request_jump(lambda: controller.Jump(self.dispatcher))
+            self.dispatcher.request_movement(lambda: controller.Forward(forward_time))
         self.mined = 0
 
     def _recognize_in_loop_center(self):
@@ -57,7 +58,7 @@ class Vision:
                        self.dispatcher.camera_queue.empty() and
                        not self.dispatcher.mr_undergoing) and not self.dispatcher.stopped:
                 logging.info("Waiting for Clearing Request Queue")
-                sleep(0.5)
+                sleep(0.1)
 
             if self.mined > failsafe_timeout:
                 self.fail_safe()
