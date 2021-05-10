@@ -26,7 +26,7 @@ dont_move = False  # This results in not moving on request
 
 # ------------------------- Bot Settings ---------------------------#
 mining_time_sphere = 1.9  # Seconds to wait while spreading mining sphere
-failsafe_timeout = 20  # Cycles in which timeout and do some movement to unblock
+failsafe_timeout = 15  # Cycles in which timeout and do some movement to unblock
 cloud = False  # Cloud computing ( DISABLED )
 prediction_batch_size = 8  # Higher takes more memory and little bit speeds up
 ore_threshold = 0.45  # Percent
