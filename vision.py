@@ -46,7 +46,7 @@ class Vision:
         else:
             self.angle_down = 1
             self.dispatcher.request_rotate(lambda: controller.LookDown(self.dispatcher, 30))
-        for _ in randint(1, 10):
+        for _ in random.randint(1, 10):
             self.dispatcher.request_jump(lambda: controller.Jump(self.dispatcher))
             self.dispatcher.request_movement(lambda: controller.Forward(forward_time))
         self.mined = 0
@@ -78,7 +78,7 @@ class Vision:
                 if not self.rotate_to_closest_ore():
                     logging.info("Too Far Away ! => Requesting Jump and Movement")
                     self.dispatcher.request_jump(lambda: controller.Jump(self.dispatcher))
-                    self.dispatcher.request_movement(lambda: controller.Forward(forward_time))
+                    self.dispatcher.request_movement(lambda: controller.Forward(forward_time + random.randint(0, 5)))
             elif warning_tfa:
                 logging.info("Too Far Away ! => Requesting Movement")
                 self.dispatcher.request_movement(lambda: controller.Forward(forward_time))
