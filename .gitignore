@@ -1,2 +1,11 @@
-/.idea/
+/.idea/*
 /venv/
+tmp.png
+/models/*
+/samples/
+/selftrain/
+/splitter/
+/images/
+/tmp/
+/tests/
+/images/*

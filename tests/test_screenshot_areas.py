@@ -34,6 +34,20 @@ class MyTestCase(unittest.TestCase):
         print(classifier.predict("../images/warning/out_0_32-1158757324.jpg"))
         print(classifier.predict("../images/warning/out_0_256-407192141.jpg"))
 
+    def test_signal(self):
+        my = pygetwindow.getWindowsWithTitle("Dual Universe")[0]
+        classifier = Classifier("../models/ores_s_v1_soft")
+        vision = Vision(my, classifier, None)
+        pyautogui.screenshot("signal.png", region=vision.get_signal_area())
+        print(classifier.predict("signal.png"))
+
+    def test_classify_signal_model_terrain(self):
+        cs = Classifier("../models/signals_v1_soft")
+        print(cs.predict("ored.png"))
+        print(cs.predict("right.png"))
+        print(cs.predict("tmp.png"))
+        print(cs.predict("top.png"))
+
     def test_realtime(self):
         classifier = Classifier("../models/ores_a_v3_soft")
         my = pygetwindow.getWindowsWithTitle("Dual Universe")[0]

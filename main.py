@@ -26,8 +26,8 @@ from rich.console import Console
 from silence_tensorflow import silence_tensorflow
 
 import controller
-from ControlDispatcher import ControlDispatcher
-from config import model_to_use, log_level, full_auto, logo
+from config import model_to_use_ores, log_level, full_auto, logo
+from control_dispatcher import ControlDispatcher
 from logger import config_logger
 
 
@@ -48,18 +48,18 @@ def activate_window(my):
     return True
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     print(logo)
     pyautogui.FAILSAFE = False
     config_logger(log_level)
     logging.info("Starting JoDVel Bot !")
-    logging.info("Loading Neural Net Model [" + model_to_use + "]... Please Wait")
+    logging.info("Loading Neural Net Model [" + model_to_use_ores + "]... Please Wait")
     silence_tensorflow()
     from classifier_predict import Classifier
     from vision import Vision
 
     try:
-        classifier = Classifier(model_to_use)
+        classifier = Classifier(model_to_use_ores)
     except Exception as ex:
         logging.critical("Failed to load Model !")
         logging.debug(ex.__str__())
@@ -78,7 +78,9 @@ if __name__ == '__main__':
                 logging.fatal("Test Sample is incorrectly identified as " + c + " !")
             tasks.pop(0)
     logging.info("Neural net Warmed Up")
-    logging.info("Current Time of Prediction: " + classifier.time.__str__() + " seconds")
+    logging.info(
+        "Current Time of Prediction: " + classifier.time.__str__() + " seconds"
+    )
     logging.info("Launching Bot")
     windows = pygetwindow.getAllTitles()
     logging.info("Locating Dual Universe Window")
@@ -107,6 +109,5 @@ if __name__ == '__main__':
         controller.maximize_mining_circle()
     logging.info("Maximized")
     vision_thread.join()
-    my.minimize()
+    # my.minimize()
     logging.info("Stopped")
-

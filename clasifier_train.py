@@ -6,9 +6,9 @@ from tensorflow.keras import layers
 from tensorflow.keras.models import Sequential
 from tensorflow.python.keras.preprocessing.image import ImageDataGenerator
 
-model_name = "models/ores_a_v4_soft"
-epochs = 10
-batch_size = 32
+model_name = "models/ores_s_v1_soft"
+epochs = 5
+batch_size = 16
 img_height = 32
 img_width = 32
 data_dir = "images"
@@ -88,7 +88,7 @@ model = Sequential([
 ])
 
 model.compile(optimizer='adam',
-              #loss=tf.keras.losses.SparseCategoricalCrossentropy(),
+              # loss=tf.keras.losses.SparseCategoricalCrossentropy(),
               loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
               metrics=['accuracy'])
 model.summary()
