@@ -26,7 +26,7 @@ class Classifier:
     def predict(self, path_to_img, learned: bool = False) -> [str, float]:
         """
         Will predict image class of image
-        :param learned: Extension for self learning module
+        :param learned: Extension for self learning module, True if used previously
         :param path_to_img: Path to image
         :rtype: str, float
         :return: class and percent confidence 0-1
