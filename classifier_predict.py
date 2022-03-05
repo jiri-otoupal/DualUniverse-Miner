@@ -26,7 +26,7 @@ class Classifier:
     def predict(self, path_to_img, learned: bool = False) -> [str, float]:
         """
         Will predict image class of image
-        :param learned:
+        :param learned: Extension for self learning module, True if used previously
         :param path_to_img: Path to image
         :rtype: str, float
         :return: class and percent confidence 0-1
@@ -54,16 +54,7 @@ class Classifier:
             img = load_img(os.path.normpath(path_to_img), target_size=(32, 32))
             img_array = img_to_array(img)
             img_array = expand_dims(img_array, 0)  # Create a batch
-            if not learned:
-                predictions = self.model.predict(
-                    img_array, batch_size=prediction_batch_size
-                )
-            else:
-                if self.bin_model is None:
-                    return None, None
-                predictions = self.bin_model.predict(
-                    img_array, batch_size=prediction_batch_size
-                )
+            predictions = self.model.predict(img_array, batch_size=prediction_batch_size)
             score = tf.nn.softmax(predictions[0])
             logging.debug("Prediction took %.4f sec" % (time() - t0))
             self.time = time() - t0
