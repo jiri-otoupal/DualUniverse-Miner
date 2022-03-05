@@ -2,6 +2,8 @@ import unittest
 
 import pyautogui
 
+import vision
+
 
 class ScreenTests(unittest.TestCase):
     def test_signal_area(self):
